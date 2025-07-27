@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="60" viewBox="0 0 200 60">
+  <!-- Food cart icon -->
+  <g transform="translate(10, 10) scale(0.8)">
+    <path d="M40,30 L10,30 L5,10 L0,10 L0,5 L8,5 L15,35 L40,35 L40,30 Z" fill="#FF7A3D"/>
+    <circle cx="15" cy="40" r="5" fill="#2C3E50"/>
+    <circle cx="35" cy="40" r="5" fill="#2C3E50"/>
+    <path d="M25,5 L45,5 L42,25 L25,25 Z" fill="#FF7A3D"/>
+    <path d="M25,10 L40,10 M25,15 L38,15 M25,20 L36,20" stroke="#FFF" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Text: StreetEats -->
+  <text x="70" y="30" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="white">Street<tspan fill="white">Eats</tspan></text>
+  
+  <!-- Tagline -->
+  <text x="70" y="45" font-family="Arial, sans-serif" font-size="10" fill="white">Quality Supplies for Street Food Vendors</text>
+</svg>

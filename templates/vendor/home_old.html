@@ -1,0 +1,350 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Vendor Dashboard - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .vendor-badge {
+        background: #28a745;
+        color: white;
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        border-radius: 10px;
+        position: absolute;
+        top: -5px;
+        right: -5px;
+    }
+
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .welcome-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        text-align: center;
+    }
+
+    .welcome-section h1 {
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-size: 2rem;
+    }
+
+    .welcome-section p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .stat-icon.orders {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+
+    .stat-icon.revenue {
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+    }
+
+    .stat-icon.rating {
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+    }
+
+    .stat-icon.products {
+        background: linear-gradient(135deg, #43e97b, #38f9d7);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .quick-actions {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        margin-bottom: 2rem;
+    }
+
+    .quick-actions h2 {
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+    }
+
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .action-card {
+        background: linear-gradient(135deg, #2f43a5, #1e2d6b);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .action-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255,107,53,0.3);
+        color: white;
+        text-decoration: none;
+    }
+
+    .action-card i {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .action-card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .action-card p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .recent-activity {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .recent-activity h2 {
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        color: #2f43a5;
+    }
+
+    .activity-content {
+        flex: 1;
+    }
+
+    .activity-title {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+    }
+
+    .activity-time {
+        font-size: 0.8rem;
+        color: #666;
+    }
+
+    @media (max-width: 768px) {
+        .nav-container {
+            padding: 0 1rem;
+        }
+
+        .nav-menu {
+            gap: 1rem;
+        }
+
+        .dashboard-container {
+            padding: 0 1rem;
+            margin: 1rem auto;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .actions-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .welcome-section h1 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-container">
+    <div class="welcome-section">
+        <h1>Welcome back, {{ user.first_name|default:user.username }}!</h1>
+        <p>Manage your business and connect with suppliers efficiently</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon orders">
+                <i class="fas fa-shopping-bag"></i>
+            </div>
+            <div class="stat-number">{{ user.vendor_profile.total_orders|default:0 }}</div>
+            <div class="stat-label">Total Orders</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon revenue">
+                <i class="fas fa-rupee-sign"></i>
+            </div>
+            <div class="stat-number">₹0</div>
+            <div class="stat-label">Monthly Revenue</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon rating">
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-number">{{ user.vendor_profile.rating|floatformat:1|default:"0.0" }}</div>
+            <div class="stat-label">Rating</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon products">
+                <i class="fas fa-box"></i>
+            </div>
+            <div class="stat-number">0</div>
+            <div class="stat-label">Active Products</div>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="actions-grid">
+            <a href="{% url 'suppliers:list' %}" class="action-card">
+                <i class="fas fa-search"></i>
+                <h3>Find Suppliers</h3>
+                <p>Browse and connect with verified suppliers</p>
+            </a>
+            
+            <a href="#" class="action-card">
+                <i class="fas fa-plus-circle"></i>
+                <h3>Add Product</h3>
+                <p>Add new products to your inventory</p>
+            </a>
+            
+            <a href="#" class="action-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>View Analytics</h3>
+                <p>Track your business performance</p>
+            </a>
+            
+            <a href="{% url 'accounts:profile' %}" class="action-card">
+                <i class="fas fa-user-edit"></i>
+                <h3>Update Profile</h3>
+                <p>Manage your business information</p>
+            </a>
+        </div>
+    </div>
+
+    <div class="recent-activity">
+        <h2>Recent Activity</h2>
+        <div class="activity-item">
+            <div class="activity-icon">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <div class="activity-content">
+                <div class="activity-title">Account Created</div>
+                <div class="activity-time">{{ user.date_joined|timesince }} ago</div>
+            </div>
+        </div>
+        
+        <div class="activity-item">
+            <div class="activity-icon">
+                <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div class="activity-content">
+                <div class="activity-title">Location Updated</div>
+                <div class="activity-time">{{ user.updated_at|timesince }} ago</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

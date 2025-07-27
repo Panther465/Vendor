@@ -1,0 +1,415 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}StreetEats Connect{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/popup-theme.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Floating Navbar -->
+    <nav class="floating-navbar" style="top:15px; padding: 7px 20px">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <a href="{% url 'core:home' %}">
+                    <img src="{% static 'images/logowebsite.png' %}" alt="StreetEats Connect" class="logo-img">
+                </a>
+            </div>
+            
+            <div class="navbar-menu">
+                {% if user.is_authenticated %}
+                    {% if user.user_type == 'vendor' %}
+                        <a href="{% url 'core:vendor_home' %}" class="navbar-link">Home</a>
+                        <a href="{% url 'suppliers:list' %}" class="navbar-link">Suppliers</a>
+                        <a href="{% url 'groupbuying:home' %}" class="navbar-link">Group Buying</a>
+                        <a href="{% url 'core:contact_us' %}" class="navbar-link">Contact Us</a>
+                        <a href="{% url 'core:about_us' %}" class="navbar-link">About Us</a>
+                    {% elif user.user_type == 'delivery' %}
+                        <a href="{% url 'core:delivery_home' %}" class="navbar-link">Home</a>
+                        <a href="{% url 'delivery:requests' %}" class="navbar-link">Requests</a>
+                        <a href="{% url 'delivery:add_availability' %}" class="navbar-link">Add Delivery</a>
+                        <a href="{% url 'core:contact_us' %}" class="navbar-link">Contact Us</a>
+                        <a href="{% url 'core:about_us' %}" class="navbar-link">About Us</a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'core:home' %}" class="navbar-link">Home</a>
+                    <a href="{% url 'suppliers:list' %}" class="navbar-link">Suppliers</a>
+                    <a href="#" class="navbar-link">Group Buying</a>
+                    <a href="{% url 'quality:assurance' %}" class="navbar-link">Quality</a>
+                    <a href="{% url 'core:contact_us' %}" class="navbar-link">Contact</a>
+                    <a href="{% url 'core:about_us' %}" class="navbar-link">About</a>
+                {% endif %}
+            </div>
+            
+            <div class="navbar-auth">
+                {% if user.is_authenticated and user.user_type == 'vendor' %}
+                    <a href="{% url 'orders:cart' %}" class="cart-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        {% if cart_count > 0 %}
+                            <span class="cart-count">{{ cart_count }}</span>
+                        {% endif %}
+                    </a>
+                {% endif %}
+                
+                {% if user.is_authenticated %}
+                    <div class="notification-bell" onclick="toggleNotificationPopup()">
+                        <i class="fas fa-bell"></i>
+                        <div id="notificationPopup" class="notification-popup-container" style="display: none;"></div>
+                    </div>
+                {% endif %}
+                
+                {% if user.is_authenticated %}
+                    <div class="profile-dropdown">
+                        <div class="profile-btn" onclick="toggleProfileDropdown()">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="profile-dropdown-menu" id="profileDropdown">
+                            <div class="dropdown-header">
+                                <div class="user-info">
+                                    <div class="user-name">{{ user.first_name }} {{ user.last_name }}</div>
+                                    <div class="user-type">
+                                        {% if user.user_type == 'vendor' %}
+                                            Vendor Account
+                                        {% elif user.user_type == 'delivery' %}
+                                            Delivery Partner
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a href="{% url 'accounts:profile' %}" class="dropdown-item">
+                                <i class="fas fa-user"></i>
+                                View Profile
+                            </a>
+                            <a href="{% url 'notifications:preferences' %}" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                Notification Settings
+                            </a>
+                            {% if user.user_type == 'vendor' %}
+                                <a href="{% url 'core:vendor_dashboard' %}" class="dropdown-item">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                    Dashboard
+                                </a>
+                                <a href="{% url 'orders:cart' %}" class="dropdown-item">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    My Cart
+                                </a>
+                                <a href="{% url 'orders:my_orders' %}" class="dropdown-item">
+                                    <i class="fas fa-box"></i>
+                                    My Orders
+                                </a>
+                                <a href="{% url 'notifications:list' %}" class="dropdown-item">
+                                    <i class="fas fa-bell"></i>
+                                    Notifications
+                                </a>
+                            {% elif user.user_type == 'delivery' %}
+                                <a href="{% url 'core:delivery_dashboard' %}" class="dropdown-item">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                    Dashboard
+                                </a>
+                                <a href="{% url 'delivery:requests' %}" class="dropdown-item">
+                                    <i class="fas fa-list"></i>
+                                    Delivery Requests
+                                </a>
+                                <a href="{% url 'delivery:add_availability' %}" class="dropdown-item">
+                                    <i class="fas fa-plus-circle"></i>
+                                    Update Availability
+                                </a>
+                            {% endif %}
+                            <div class="dropdown-divider"></div>
+                            <a href="{% url 'accounts:logout' %}" class="dropdown-item logout-item">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="auth-btn">
+                        <i class="fas fa-user"></i>
+                        Login
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="modern-footer">
+        <div class="container">
+            <div class="footer-main">
+                <div class="footer-brand-section">
+                    <div class="footer-logo">
+                        <img src="{% static 'images/logowebsite.png' %}" alt="SupplyForge">
+                        <span class="brand-name">SupplyForge</span>
+                    </div>
+                    <p class="footer-description">
+                        SupplyForge empowers vendors to connect with quality suppliers, 
+                        making food sourcing easier to share, understand, and act on.
+                    </p>
+                    <div class="footer-social">
+                        <a href="https://twitter.com/supplyforge" aria-label="Twitter" class="social-link" target="_blank">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://instagram.com/supplyforge" aria-label="Instagram" class="social-link" target="_blank">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://linkedin.com/company/supplyforge" aria-label="LinkedIn" class="social-link" target="_blank">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://github.com/supplyforge" aria-label="GitHub" class="social-link" target="_blank">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-links-container">
+                    <div class="footer-column">
+                        <h3 class="footer-column-title">Platform</h3>
+                        <ul class="footer-links">
+                            <li><a href="{% url 'suppliers:list' %}">Suppliers</a></li>
+                            <li><a href="{% url 'groupbuying:home' %}">Group Buying</a></li>
+                            <li><a href="{% url 'quality:assurance' %}">Quality Assurance</a></li>
+                            <li><a href="{% url 'orders:list' %}">Orders</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3 class="footer-column-title">Resources</h3>
+                        <ul class="footer-links">
+                            <li><a href="{% url 'core:about_us' %}">Documentation</a></li>
+                            <li><a href="{% url 'suppliers:list' %}">Find Suppliers</a></li>
+                            <li><a href="{% url 'quality:report' %}">Quality Reports</a></li>
+                            <li><a href="{% url 'core:contact_us' %}">Support</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3 class="footer-column-title">Company</h3>
+                        <ul class="footer-links">
+                            <li><a href="{% url 'core:about_us' %}">About</a></li>
+                            <li><a href="{% url 'core:contact_us' %}">Careers</a></li>
+                            <li><a href="{% url 'core:contact_us' %}">Contact</a></li>
+                            <li><a href="{% url 'suppliers:list' %}">Partners</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>&copy; 2025 SupplyForge. All rights reserved.</p>
+                    <div class="footer-legal">
+                        <a href="{% url 'core:about_us' %}">Privacy Policy</a>
+                        <a href="{% url 'core:about_us' %}">Terms of Service</a>
+                        <a href="{% url 'core:contact_us' %}">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/popup-theme.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    
+    <!-- Location Access Popup -->
+    <script>
+    // Location Access Popup
+    function showLocationAccessPopup() {
+        const content = `
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-map-marker-alt" style="color: #ff6b35;"></i>
+                    Enable Location Access
+                </h3>
+                <button class="modal-close" onclick="themedPopup.closeModal(); themedPopup.resolveModal(false);">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-message">We need your location to show nearby vendors and provide accurate delivery services.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" onclick="themedPopup.closeModal(); themedPopup.resolveModal(false);">
+                    <i class="fas fa-times"></i>
+                    Not Now
+                </button>
+                <button class="modal-btn modal-btn-primary" onclick="themedPopup.closeModal(); themedPopup.resolveModal(true);">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Allow Location
+                </button>
+            </div>
+        `;
+        
+        return themedPopup.showCustomModal(content, { type: 'location' });
+    }
+    
+    // Location handling function
+    async function requestLocationAccess() {
+        try {
+            // Check if geolocation is supported
+            if (!navigator.geolocation) {
+                themedPopup.error('Geolocation is not supported by this browser.');
+                return false;
+            }
+            
+            // Show location access popup
+            const userConsent = await showLocationAccessPopup();
+            
+            if (!userConsent) {
+                return false;
+            }
+            
+            // Show loading
+            const loadingModal = themedPopup.showLoading('Getting your location...');
+            
+            // Request location
+            return new Promise((resolve) => {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        themedPopup.closeModal(); // Close loading
+                        const { latitude, longitude } = position.coords;
+                        
+                        // Store location in localStorage
+                        localStorage.setItem('userLocation', JSON.stringify({
+                            latitude,
+                            longitude,
+                            timestamp: Date.now()
+                        }));
+                        
+                        themedPopup.success('Location access granted successfully!');
+                        resolve({ latitude, longitude });
+                    },
+                    (error) => {
+                        themedPopup.closeModal(); // Close loading
+                        let errorMessage = 'Unable to get your location. ';
+                        
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorMessage += 'Location access was denied.';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorMessage += 'Location information is unavailable.';
+                                break;
+                            case error.TIMEOUT:
+                                errorMessage += 'Location request timed out.';
+                                break;
+                            default:
+                                errorMessage += 'An unknown error occurred.';
+                                break;
+                        }
+                        
+                        themedPopup.error(errorMessage);
+                        resolve(false);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 300000 // 5 minutes
+                    }
+                );
+            });
+        } catch (error) {
+            themedPopup.error('An error occurred while requesting location access.');
+            return false;
+        }
+    }
+    
+    // Check if location should be requested on page load
+    function checkLocationOnLoad() {
+        // Only check location status for authenticated users (no auto-popup)
+        {% if user.is_authenticated %}
+            // Just check current location status for button state
+            checkLocationStatus();
+        {% endif %}
+    }
+    
+    // Initialize location check when page loads
+    document.addEventListener('DOMContentLoaded', checkLocationOnLoad);
+    
+    // Check location status on page load
+    function checkLocationStatus() {
+        const storedLocation = localStorage.getItem('userLocation');
+        if (storedLocation) {
+            const location = JSON.parse(storedLocation);
+            // Check if location is less than 24 hours old
+            if (location && (Date.now() - location.timestamp) < 24 * 60 * 60 * 1000) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    // Export for use in other scripts
+    window.requestLocationAccess = requestLocationAccess;
+    </script>
+    
+    <!-- Notification System JavaScript -->
+    <script>
+    // Notification popup functionality
+    function toggleNotificationPopup() {
+        const popup = document.getElementById('notificationPopup');
+        if (popup.style.display === 'none' || popup.style.display === '') {
+            loadNotificationPopup();
+        } else {
+            popup.style.display = 'none';
+        }
+    }
+    
+    function loadNotificationPopup() {
+        const popup = document.getElementById('notificationPopup');
+        
+        fetch('/notifications/popup/')
+            .then(response => response.text())
+            .then(html => {
+                popup.innerHTML = html;
+                popup.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error loading notifications:', error);
+            });
+    }
+    
+    function updateNotificationCount(count) {
+        // Notification count display has been removed
+        // This function is kept for compatibility but does nothing
+    }
+    
+    // Close popup when clicking outside
+    document.addEventListener('click', function(event) {
+        const popup = document.getElementById('notificationPopup');
+        const bell = document.querySelector('.notification-bell');
+        
+        if (popup && bell && !bell.contains(event.target)) {
+            popup.style.display = 'none';
+        }
+    });
+    
+    // Auto-refresh notifications every 30 seconds
+    {% if user.is_authenticated %}
+    setInterval(function() {
+        fetch('/notifications/json/?limit=1')
+            .then(response => response.json())
+            .then(data => {
+                updateNotificationCount(data.unread_count);
+            })
+            .catch(error => {
+                console.error('Error checking notifications:', error);
+            });
+    }, 30000);
+    {% endif %}
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

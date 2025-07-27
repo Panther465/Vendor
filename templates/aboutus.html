@@ -1,0 +1,903 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - StreetEats Connect | Empowering Street Food Vendors{% endblock %}
+
+{% block extra_css %}
+<style>
+        /* Additional styles for About Us page */
+        .hero-about {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 120px 5% 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-about:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="25" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="3" fill="rgba(255,255,255,0.08)"/><circle cx="50" cy="10" r="1.5" fill="rgba(255,255,255,0.12)"/><circle cx="10" cy="60" r="2.5" fill="rgba(255,255,255,0.06)"/><circle cx="90" cy="30" r="1" fill="rgba(255,255,255,0.15)"/></svg>');
+            animation: float 20s infinite linear;
+        }
+
+        .hero-about h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-about p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.95;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stats-section {
+            background: white;
+            padding: 80px 5%;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: var(--border-radius-lg);
+            background: linear-gradient(135deg, var(--bg-light) 0%, white 100%);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-item:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        .story-section {
+            background: var(--bg-light);
+            padding: 80px 5%;
+        }
+
+        .story-content {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            margin-top: 50px;
+        }
+
+        .story-text {
+            flex: 1;
+        }
+
+        .story-text h3 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 25px;
+        }
+
+        .story-text p {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .story-image {
+            flex: 1;
+            position: relative;
+        }
+
+        .story-image img {
+            width: 100%;
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .story-image:before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 3px solid var(--primary-light);
+            border-radius: var(--border-radius-xl);
+            opacity: 0.3;
+        }
+
+        .mission-vision {
+            background: white;
+            padding: 80px 5%;
+        }
+
+        .mission-vision-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 50px;
+            margin-top: 50px;
+        }
+
+        .mission-card, .vision-card {
+            padding: 40px;
+            border-radius: var(--border-radius-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mission-card {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .vision-card {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #1a2530 100%);
+            color: white;
+        }
+
+        .mission-card:before, .vision-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 25px;
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .card-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            opacity: 0.95;
+        }
+
+        .values-section {
+            background: var(--bg-light);
+            padding: 80px 5%;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .value-card {
+            background: white;
+            padding: 35px;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .value-card:hover {
+            transform: translateY(-15px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .value-card:nth-child(even):before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(255, 122, 61, 0.05) 100%);
+        }
+
+        .value-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            color: white;
+            font-size: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .value-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .value-description {
+            color: var(--text-light);
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+
+        .team-section {
+            background: white;
+            padding: 80px 5%;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .team-card {
+            background: white;
+            border-radius: var(--border-radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .team-card:hover {
+            transform: translateY(-15px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .team-image {
+            height: 280px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .team-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .team-card:hover .team-image img {
+            transform: scale(1.1);
+        }
+
+        .team-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            padding: 40px 20px 20px;
+            color: white;
+            transform: translateY(100%);
+            transition: var(--transition);
+        }
+
+        .team-card:hover .team-overlay {
+            transform: translateY(0);
+        }
+
+        .team-social {
+            display: flex;
+            gap: 15px;
+        }
+
+        .team-social-link {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .team-social-link:hover {
+            background: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .team-info {
+            padding: 25px;
+        }
+
+        .team-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 8px;
+        }
+
+        .team-role {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .team-bio {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .journey-section {
+            background: var(--bg-light);
+            padding: 80px 5%;
+        }
+
+        .journey-timeline {
+            position: relative;
+            margin-top: 50px;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            margin: 0 30px;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content:after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            right: -15px;
+            width: 0;
+            height: 0;
+            border: 15px solid transparent;
+            border-left-color: white;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content:after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: -15px;
+            width: 0;
+            height: 0;
+            border: 15px solid transparent;
+            border-right-color: white;
+        }
+
+        .timeline-date {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            background: white;
+            border: 4px solid var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary-color);
+            z-index: 2;
+        }
+
+        .timeline-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+
+        .timeline-description {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .cta-about {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #1a2530 100%);
+            padding: 80px 5%;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-about:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M20 20h10v10h-10zM70 70h10v10h-10zM50 10h10v10h-10zM10 60h10v10h-10zM80 30h10v10h-10z" fill="rgba(255,122,61,0.1)"/></svg>');
+            animation: float 25s infinite linear reverse;
+        }
+
+        .cta-about-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-about h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .cta-about p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            opacity: 0.95;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .story-content {
+                flex-direction: column;
+            }
+            
+            .timeline-line {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                flex-direction: row !important;
+            }
+            
+            .timeline-date {
+                left: 30px;
+                width: 60px;
+                height: 60px;
+                font-size: 0.9rem;
+            }
+            
+            .timeline-content {
+                margin-left: 80px;
+                margin-right: 0;
+            }
+            
+            .timeline-item:nth-child(even) .timeline-content:after,
+            .timeline-item:nth-child(odd) .timeline-content:after {
+                top: 20px;
+                left: -15px;
+                border: 15px solid transparent;
+                border-right-color: white;
+                border-left-color: transparent;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-about h1 {
+                font-size: 2.5rem;
+            }
+            
+            .mission-vision-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .cta-about h2 {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-about h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline-content {
+                margin-left: 60px;
+            }
+            
+            .timeline-date {
+                width: 50px;
+                height: 50px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-about">
+            <h1>Empowering Street Food Culture</h1>
+            <p>We're on a mission to revolutionize the street food ecosystem by connecting vendors with quality suppliers, fostering community growth, and preserving the authentic flavors that make Indian street food legendary.</p>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="section-header">
+                <h2>Our Impact in Numbers</h2>
+                <p>Since our launch, we've been making a tangible difference in the street food community</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">15,000+</span>
+                    <span class="stat-label">Active Vendors</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">2,500+</span>
+                    <span class="stat-label">Verified Suppliers</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">₹50L+</span>
+                    <span class="stat-label">Monthly Transactions</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">85%</span>
+                    <span class="stat-label">Cost Savings Achieved</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">12</span>
+                    <span class="stat-label">Cities Connected</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">98%</span>
+                    <span class="stat-label">Vendor Satisfaction</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Our Story Section -->
+        <section class="story-section">
+            <div class="section-header">
+                <h2>Our Story</h2>
+                <p>Born from the streets, built for the streets</p>
+            </div>
+            <div class="story-content">
+                <div class="story-text">
+                    <h3>From Observation to Innovation</h3>
+                    <p>It all started when our founder, Rajesh, noticed his neighborhood vendor, Ramesh Uncle, struggling with rising ingredient costs and unreliable suppliers. Despite serving the most delicious pav bhaji in the area, Ramesh Uncle was spending hours each morning at wholesale markets, often returning with subpar ingredients at inflated prices.</p>
+                    <p>This sparked an idea: What if we could bring the wholesale market to the vendors? What if technology could solve the age-old problems of quality, cost, and convenience that plague our street food heroes?</p>
+                    <p>After months of research, talking to hundreds of vendors across Mumbai, Delhi, and Bangalore, we realized this wasn't just Ramesh Uncle's problem—it was a systemic issue affecting thousands of street food entrepreneurs across India.</p>
+                    <p>Thus, StreetEats Connect was born—not in a boardroom, but on the streets, from real conversations with real people who pour their hearts into feeding our communities.</p>
+                </div>
+                <div class="story-image">
+                    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Street food vendor preparing food">
+                </div>
+            </div>
+        </section>
+
+        <!-- Mission & Vision Section -->
+        <section class="mission-vision">
+            <div class="section-header">
+                <h2>Our Purpose</h2>
+                <p>Driven by purpose, guided by values</p>
+            </div>
+            <div class="mission-vision-grid">
+                <div class="mission-card">
+                    <div class="card-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3 class="card-title">Our Mission</h3>
+                    <p class="card-text">To empower street food vendors across India by providing seamless access to quality raw materials, financial support, and technology-driven solutions that enhance their business sustainability and growth while preserving the authentic flavors of Indian street food culture.</p>
+                </div>
+                <div class="vision-card">
+                    <div class="card-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3 class="card-title">Our Vision</h3>
+                    <p class="card-text">To create a thriving ecosystem where every street food vendor has equal access to quality ingredients, fair pricing, and growth opportunities, ultimately strengthening the backbone of India's vibrant food culture and supporting millions of livelihoods.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Values Section -->
+        <section class="values-section">
+            <div class="section-header">
+                <h2>Our Core Values</h2>
+                <p>The principles that guide everything we do</p>
+            </div>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3 class="value-title">Trust & Transparency</h3>
+                    <p class="value-description">We believe in building lasting relationships through honest communication, transparent pricing, and reliable service delivery.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="value-title">Community First</h3>
+                    <p class="value-description">Our vendors and suppliers are family. Every decision we make prioritizes the well-being and success of our community.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3 class="value-title">Sustainable Growth</h3>
+                    <p class="value-description">We promote practices that ensure long-term success for vendors while maintaining environmental and social responsibility.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="value-title">Innovation</h3>
+                    <p class="value-description">We continuously evolve our platform with cutting-edge technology to solve real problems faced by the street food community.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3 class="value-title">Quality Excellence</h3>
+                    <p class="value-description">We maintain the highest standards in supplier verification, product quality, and service delivery to ensure vendor success.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <h3 class="value-title">Fair Trade</h3>
+                    <p class="value-description">We ensure fair pricing for vendors and suppliers, creating a win-win ecosystem that benefits everyone involved.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+
+        <!-- Journey Timeline Section -->
+        <section class="journey-section">
+            <div class="section-header">
+                <h2>Our Journey</h2>
+                <p>Key milestones in our mission to transform street food ecosystem</p>
+            </div>
+            <div class="journey-timeline">
+                <div class="timeline-line"></div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-date">2022</div>
+                    <div class="timeline-content">
+                        <h4 class="timeline-title">The Spark</h4>
+                        <p class="timeline-description">Rajesh meets Ramesh Uncle and identifies the core problem. Extensive market research begins across Mumbai's street food hubs. Initial concept validation with 200+ vendors.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">2023</div>
+                    <div class="timeline-content">
+                        <h4 class="timeline-title">Foundation Laid</h4>
+                        <p class="timeline-description">Team formation and MVP development. Pilot program launched with 50 vendors in Mumbai. First partnerships established with local suppliers. Initial funding secured.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">2024</div>
+                    <div class="timeline-content">
+                        <h4 class="timeline-title">Rapid Growth</h4>
+                        <p class="timeline-description">Platform expansion to Delhi and Bangalore. Group buying feature launched. PM SVANidhi integration completed. Crossed 1,000 active vendors milestone.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">2024</div>
+                    <div class="timeline-content">
+                        <h4 class="timeline-title">Scale & Impact</h4>
+                        <p class="timeline-description">15,000+ vendors onboarded across 12 cities. Advanced quality assurance system deployed. Mobile app launched in regional languages. ₹50L+ monthly transaction volume achieved.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">2025</div>
+                    <div class="timeline-content">
+                        <h4 class="timeline-title">Future Vision</h4>
+                        <p class="timeline-description">AI-powered demand forecasting rollout. Blockchain traceability implementation. Expansion to 50+ cities planned. International market exploration begins.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+      
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Counter animation for stats
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            const speed = 200;
+
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = counter.innerText;
+                    let numericTarget = parseInt(target.replace(/[^\d]/g, ''));
+                    
+                    // Handle special cases
+                    if (target.includes('₹') && target.includes('L')) {
+                        numericTarget = parseInt(target.replace(/[^\d]/g, ''));
+                    } else if (target.includes('%')) {
+                        numericTarget = parseInt(target.replace(/[^\d]/g, ''));
+                    }
+
+                    const count = +counter.getAttribute('data-count') || 0;
+                    const inc = numericTarget / speed;
+
+                    if (count < numericTarget) {
+                        const newCount = Math.ceil(count + inc);
+                        counter.setAttribute('data-count', newCount);
+                        
+                        if (target.includes('₹') && target.includes('L')) {
+                            counter.innerText = `₹${newCount}L+`;
+                        } else if (target.includes('%')) {
+                            counter.innerText = `${newCount}%`;
+                        } else if (target.includes('+')) {
+                            counter.innerText = `${newCount.toLocaleString()}+`;
+                        } else {
+                            counter.innerText = newCount.toLocaleString();
+                        }
+                        
+                        setTimeout(updateCount, 1);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCount();
+            });
+        }
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    
+                    // Trigger counter animation for stats section
+                    if (entry.target.closest('.stats-section')) {
+                        animateCounters();
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements
+        document.addEventListener('DOMContentLoaded', () => {
+            const animatedElements = document.querySelectorAll(
+                '.stat-item, .value-card, .team-card, .timeline-item'
+            );
+            
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+
+        // Mobile menu functionality
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const nav = document.querySelector('nav ul');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                nav.classList.toggle('mobile-active');
+                mobileMenuBtn.querySelector('i').classList.toggle('fa-bars');
+                mobileMenuBtn.querySelector('i').classList.toggle('fa-times');
+            });
+        }
+
+        // Newsletter form submission
+        const newsletterForm = document.querySelector('.newsletter-form');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = this.querySelector('input[type="email"]').value;
+                if (email) {
+                    themedPopup.success('Thank you for subscribing! We\'ll keep you updated.', 'Subscription Successful');
+                    this.querySelector('input[type="email"]').value = '';
+                }
+            });
+        }
+    </script>
+{% endblock %}

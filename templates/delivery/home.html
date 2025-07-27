@@ -1,0 +1,541 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delivery Partner Home - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<style>
+.delivery-home-container {
+    margin-top: 80px;
+    min-height: calc(100vh - 80px);
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #ff6b35 0%, #e55a2b 100%);
+    color: white;
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+    z-index: 1;
+}
+
+.hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-content {
+    text-align: left;
+}
+
+.hero-illustration {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.hero-illustration img {
+    max-width: 100%;
+    height: auto;
+    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2));
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+.hero-decoration {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    animation: pulse 4s ease-in-out infinite;
+}
+
+.hero-decoration:nth-child(1) {
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.hero-decoration:nth-child(2) {
+    top: 60%;
+    right: 10%;
+    animation-delay: 2s;
+    width: 60px;
+    height: 60px;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.2); opacity: 0.1; }
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    opacity: 0.9;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 15px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-primary {
+    background: white;
+    color: #17a2b8;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-secondary {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 2px solid white;
+}
+
+.btn-secondary:hover {
+    background: white;
+    color: #17a2b8;
+}
+
+.how-to-section {
+    padding: 80px 0;
+    background: white;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 60px;
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-top: 50px;
+}
+
+.step-card {
+    text-align: center;
+    position: relative;
+}
+
+.step-number {
+    width: 60px;
+    height: 60px;
+    background: #17a2b8;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 auto 20px;
+}
+
+.step-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.step-description {
+    color: #666;
+    line-height: 1.6;
+}
+
+.features-section {
+    padding: 80px 0;
+    background: #f8f9fa;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.feature-card {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    font-size: 2rem;
+    color: white;
+}
+
+.feature-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.feature-description {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.feature-link {
+    color: #17a2b8;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.feature-link:hover {
+    color: #138496;
+}
+
+.earnings-section {
+    padding: 80px 0;
+    background: white;
+}
+
+.earnings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.earning-card {
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.earning-amount {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.earning-label {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.cta-section {
+    background: linear-gradient(135deg, #FF7A3D 0%, #E56A2E 100%);
+    color: white;
+    padding: 80px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+    z-index: 1;
+}
+
+.cta-content {
+    position: relative;
+    z-index: 2;
+}
+
+.cta-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cta-description {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    opacity: 0.95;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.btn-large {
+    padding: 20px 40px;
+    font-size: 1.1rem;
+    background-color: white;
+    color: #FF7A3D;
+    border: 2px solid white;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-large:hover {
+    background-color: transparent;
+    color: white;
+    border-color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+    .hero-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+    }
+    
+    .hero-content {
+        text-align: center;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .features-grid,
+    .steps-grid,
+    .earnings-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .hero-illustration {
+        order: -1;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="delivery-home-container">
+    <div class="hero-section">
+        <div class="hero-decoration"></div>
+        <div class="hero-decoration"></div>
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title" style="color: white;">
+                    <i class="fas fa-motorcycle"></i>
+                    Welcome Delivery Partner
+                </h1>
+                <p class="hero-subtitle">Join StreetEats Connect and start earning by delivering quality food supplies to vendors</p>
+                <div class="hero-actions">
+                    <a href="{% url 'delivery:add_availability' %}" class="btn btn-primary">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Update Availability
+                    </a>
+                    <a href="{% url 'core:delivery_dashboard' %}" class="btn btn-secondary">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Go to Dashboard
+                    </a>
+                </div>
+            </div>
+            <div class="hero-illustration">
+                <img src="{% static 'images/delivery-illustration.svg' %}" alt="Delivery partner with motorcycle">
+            </div>
+        </div>
+    </div>
+
+    <div class="how-to-section">
+        <div class="container">
+            <h2 class="section-title">How to Start Earning</h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Set Your Availability</h3>
+                    <p class="step-description">Update your location, availability status, and delivery preferences to start receiving requests.</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Receive Requests</h3>
+                    <p class="step-description">Get notified when vendors in your area need delivery services for their orders.</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Accept & Deliver</h3>
+                    <p class="step-description">Accept delivery requests, pick up orders from suppliers, and deliver to vendors safely.</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Get Paid</h3>
+                    <p class="step-description">Earn money for each successful delivery based on distance, weight, and delivery time.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="earnings-section">
+        <div class="container">
+            <h2 class="section-title">Earning Potential</h2>
+            <div class="earnings-grid">
+                <div class="earning-card">
+                    <div class="earning-amount">₹200-500</div>
+                    <div class="earning-label">Per Delivery</div>
+                </div>
+                
+                <div class="earning-card">
+                    <div class="earning-amount">₹2000-5000</div>
+                    <div class="earning-label">Per Day</div>
+                </div>
+                
+                <div class="earning-card">
+                    <div class="earning-amount">₹15000-35000</div>
+                    <div class="earning-label">Per Month</div>
+                </div>
+                
+                <div class="earning-card">
+                    <div class="earning-amount">Flexible</div>
+                    <div class="earning-label">Working Hours</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="features-section">
+        <div class="container">
+            <h2 class="section-title">Why Choose StreetEats Connect</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 class="feature-title">Flexible Schedule</h3>
+                    <p class="feature-description">Work when you want. Set your own availability and choose delivery requests that fit your schedule.</p>
+                    <a href="{% url 'delivery:add_availability' %}" class="feature-link">Set Availability →</a>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-rupee-sign"></i>
+                    </div>
+                    <h3 class="feature-title">Good Earnings</h3>
+                    <p class="feature-description">Earn competitive rates for each delivery with bonuses for peak hours and long-distance deliveries.</p>
+                    <a href="{% url 'delivery:requests' %}" class="feature-link">View Requests →</a>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Safe & Secure</h3>
+                    <p class="feature-description">All deliveries are insured and we provide safety guidelines to ensure secure transactions.</p>
+                    <a href="{% url 'accounts:profile' %}" class="feature-link">Update Profile →</a>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Easy to Use</h3>
+                    <p class="feature-description">Simple interface to manage requests, track deliveries, and communicate with vendors.</p>
+                    <a href="{% url 'notifications:list' %}" class="feature-link">View Notifications →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Start Delivering?</h2>
+                <p class="cta-description">Update your availability and start receiving delivery requests in your area.</p>
+                <a href="{% url 'delivery:add_availability' %}" class="btn btn-primary btn-large">
+                    <i class="fas fa-motorcycle"></i>
+                    Start Delivering
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

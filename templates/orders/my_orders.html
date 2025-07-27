@@ -1,0 +1,460 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Orders - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<style>
+    .orders-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 100px 20px 40px;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+
+    .page-subtitle {
+        font-size: 1.1rem;
+        color: #7f8c8d;
+    }
+
+    .no-orders {
+        text-align: center;
+        padding: 80px 20px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .no-orders-icon {
+        font-size: 4rem;
+        color: #e74c3c;
+        margin-bottom: 20px;
+    }
+
+    .no-orders-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 15px;
+    }
+
+    .no-orders-text {
+        font-size: 1.1rem;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+    }
+
+    .shop-now-btn {
+        display: inline-block;
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        padding: 12px 30px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .shop-now-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .orders-grid {
+        display: grid;
+        gap: 20px;
+    }
+
+    .order-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .order-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .order-header {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .order-number {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .order-date {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .order-body {
+        padding: 20px;
+    }
+
+    .order-status {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .status-badge {
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-confirmed {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-processing {
+        background: #cce5ff;
+        color: #004085;
+    }
+
+    .status-shipped {
+        background: #e2e3e5;
+        color: #383d41;
+    }
+
+    .status-delivered {
+        background: #d1ecf1;
+        color: #0c5460;
+    }
+
+    .status-cancelled {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .payment-status {
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .payment-paid {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .payment-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .payment-failed {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .order-items {
+        margin-bottom: 20px;
+    }
+
+    .order-items-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+
+    .item-list {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+    }
+
+    .order-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .order-item:last-child {
+        border-bottom: none;
+    }
+
+    .item-details {
+        flex: 1;
+    }
+
+    .item-name {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 2px;
+    }
+
+    .item-supplier {
+        font-size: 0.85rem;
+        color: #7f8c8d;
+    }
+
+    .item-quantity {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin: 0 15px;
+    }
+
+    .item-price {
+        font-weight: 600;
+        color: #e74c3c;
+    }
+
+    .order-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 15px;
+        border-top: 2px solid #e9ecef;
+        margin-top: 15px;
+    }
+
+    .total-label {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .total-amount {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #e74c3c;
+    }
+
+    .order-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .action-btn {
+        padding: 8px 20px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 10px rgba(52, 152, 219, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #5a6268;
+        color: white;
+        text-decoration: none;
+    }
+
+    .delivery-info {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 15px;
+    }
+
+    .delivery-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
+    }
+
+    .delivery-address {
+        font-size: 0.85rem;
+        color: #6c757d;
+        line-height: 1.4;
+    }
+
+    @media (max-width: 768px) {
+        .orders-container {
+            padding: 80px 15px 20px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+        }
+
+        .order-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .order-status {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .order-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+        .item-quantity {
+            margin: 0;
+        }
+
+        .order-actions {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="orders-container">
+    <div class="page-header">
+        <h1 class="page-title">My Orders</h1>
+        <p class="page-subtitle">Track and manage your order history</p>
+    </div>
+
+    {% if not has_orders %}
+        <div class="no-orders">
+            <div class="no-orders-icon">
+                <i class="fas fa-shopping-bag"></i>
+            </div>
+            <h2 class="no-orders-title">No Orders Yet</h2>
+            <p class="no-orders-text">
+                You haven't placed any orders yet. Start shopping to see your orders here!
+            </p>
+            <a href="{% url 'suppliers:list' %}" class="shop-now-btn">
+                <i class="fas fa-shopping-cart"></i>
+                Start Shopping
+            </a>
+        </div>
+    {% else %}
+        <div class="orders-grid">
+            {% for order in orders %}
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <div class="order-number">Order #{{ order.order_number }}</div>
+                            <div class="order-date">{{ order.created_at|date:"F d, Y - g:i A" }}</div>
+                        </div>
+                    </div>
+
+                    <div class="order-body">
+                        <div class="order-status">
+                            <span class="status-badge status-{{ order.status }}">
+                                {{ order.get_status_display }}
+                            </span>
+                            <span class="payment-status payment-{{ order.payment_status }}">
+                                Payment: {{ order.get_payment_status_display }}
+                            </span>
+                        </div>
+
+                        <div class="order-items">
+                            <div class="order-items-title">
+                                <i class="fas fa-box"></i>
+                                Order Items ({{ order.items.count }} item{{ order.items.count|pluralize }})
+                            </div>
+                            <div class="item-list">
+                                {% for item in order.items.all %}
+                                    <div class="order-item">
+                                        <div class="item-details">
+                                            <div class="item-name">{{ item.product.name }}</div>
+                                            <div class="item-supplier">by {{ item.supplier.business_name }}</div>
+                                        </div>
+                                        <div class="item-quantity">Qty: {{ item.quantity }}</div>
+                                        <div class="item-price">₹{{ item.total_price }}</div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="delivery-info">
+                            <div class="delivery-title">
+                                <i class="fas fa-truck"></i>
+                                Delivery Information
+                            </div>
+                            <div class="delivery-address">
+                                <strong>Partner:</strong> {{ order.delivery_partner }}<br>
+                                <strong>Address:</strong> {{ order.delivery_address }}
+                            </div>
+                        </div>
+
+                        <div class="order-total">
+                            <span class="total-label">Total Amount:</span>
+                            <span class="total-amount">₹{{ order.total_amount }}</span>
+                        </div>
+
+                        <div class="order-actions">
+                            <a href="{% url 'orders:detail' order.id %}" class="action-btn btn-primary">
+                                <i class="fas fa-eye"></i>
+                                View Details
+                            </a>
+                            {% if order.status == 'pending' or order.status == 'confirmed' %}
+                                <button class="action-btn btn-secondary" onclick="trackOrder({{ order.id }})">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Track Order
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function trackOrder(orderId) {
+    // Placeholder for order tracking functionality
+    alert('Order tracking feature will be implemented soon!');
+}
+</script>
+{% endblock %}

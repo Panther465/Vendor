@@ -1,0 +1,418 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Notification Preferences - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<style>
+.preferences-container {
+    max-width: 800px;
+    margin: 100px auto 50px;
+    padding: 0 20px;
+}
+
+.preferences-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.preferences-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.preferences-subtitle {
+    color: #666;
+    font-size: 16px;
+}
+
+.preferences-form {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.preference-section {
+    padding: 30px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.preference-section:last-child {
+    border-bottom: none;
+}
+
+.section-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-description {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.preference-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.preference-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.preference-item:hover {
+    background: #e9ecef;
+}
+
+.preference-info {
+    flex: 1;
+}
+
+.preference-label {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.preference-desc {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #2f43a5;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.save-button {
+    background: #2f43a5;
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 30px auto 0;
+}
+
+.save-button:hover {
+    background: #1e2d6b;
+    transform: translateY(-2px);
+}
+
+.section-icon {
+    font-size: 1.2rem;
+    color: #2f43a5;
+}
+
+@media (max-width: 768px) {
+    .preferences-container {
+        margin-top: 80px;
+        padding: 0 15px;
+    }
+    
+    .preference-section {
+        padding: 20px;
+    }
+    
+    .preference-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .preference-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .toggle-switch {
+        align-self: flex-end;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="preferences-container">
+    <div class="preferences-header">
+        <h1 class="preferences-title">
+            <i class="fas fa-cog"></i>
+            Notification Preferences
+        </h1>
+        <p class="preferences-subtitle">
+            Customize how and when you receive notifications from StreetEats Connect
+        </p>
+    </div>
+    
+    <form method="post" class="preferences-form">
+        {% csrf_token %}
+        
+        <div class="preference-section">
+            <h2 class="section-title">
+                <i class="fas fa-envelope section-icon"></i>
+                Email Notifications
+            </h2>
+            <p class="section-description">
+                Receive notifications via email. These will be sent to your registered email address.
+            </p>
+            <div class="preference-grid">
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">Order Updates</div>
+                        <div class="preference-desc">Get notified about order status changes</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="email_order_updates" {% if preferences.email_order_updates %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">Delivery Updates</div>
+                        <div class="preference-desc">Get notified about delivery requests and status</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="email_delivery_updates" {% if preferences.email_delivery_updates %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">Payment Updates</div>
+                        <div class="preference-desc">Get notified about payment confirmations and failures</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="email_payment_updates" {% if preferences.email_payment_updates %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">Group Buying</div>
+                        <div class="preference-desc">Get notified about group buying opportunities</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="email_group_buying" {% if preferences.email_group_buying %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">System Announcements</div>
+                        <div class="preference-desc">Get notified about important system updates</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="email_system_announcements" {% if preferences.email_system_announcements %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="preference-section">
+            <h2 class="section-title">
+                <i class="fas fa-mobile-alt section-icon"></i>
+                Push Notifications
+            </h2>
+            <p class="section-description">
+                Receive push notifications on your mobile device (when using our mobile app).
+            </p>
+            <div class="preference-grid">
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">Order Updates</div>
+                        <div class="preference-desc">Push notifications for order status changes</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="push_order_updates" {% if preferences.push_order_updates %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">Delivery Updates</div>
+                        <div class="preference-desc">Push notifications for delivery updates</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="push_delivery_updates" {% if preferences.push_delivery_updates %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">Payment Updates</div>
+                        <div class="preference-desc">Push notifications for payment status</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="push_payment_updates" {% if preferences.push_payment_updates %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">Group Buying</div>
+                        <div class="preference-desc">Push notifications for group buying</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="push_group_buying" {% if preferences.push_group_buying %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">System Announcements</div>
+                        <div class="preference-desc">Push notifications for system updates</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="push_system_announcements" {% if preferences.push_system_announcements %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="preference-section">
+            <h2 class="section-title">
+                <i class="fas fa-bell section-icon"></i>
+                In-App Notifications
+            </h2>
+            <p class="section-description">
+                Receive notifications within the StreetEats Connect platform.
+            </p>
+            <div class="preference-grid">
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">Order Updates</div>
+                        <div class="preference-desc">In-app notifications for order status changes</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="inapp_order_updates" {% if preferences.inapp_order_updates %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">Delivery Updates</div>
+                        <div class="preference-desc">In-app notifications for delivery updates</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="inapp_delivery_updates" {% if preferences.inapp_delivery_updates %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">Payment Updates</div>
+                        <div class="preference-desc">In-app notifications for payment status</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="inapp_payment_updates" {% if preferences.inapp_payment_updates %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">Group Buying</div>
+                        <div class="preference-desc">In-app notifications for group buying</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="inapp_group_buying" {% if preferences.inapp_group_buying %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">System Announcements</div>
+                        <div class="preference-desc">In-app notifications for system updates</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="inapp_system_announcements" {% if preferences.inapp_system_announcements %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <button type="submit" class="save-button">
+            <i class="fas fa-save"></i>
+            Save Preferences
+        </button>
+    </form>
+</div>
+{% endblock %}

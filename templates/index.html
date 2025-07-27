@@ -1,0 +1,356 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}StreetEats Connect - B2B Platform for Street Food Vendors{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Quality Raw Materials for Street Food Vendors</h1>
+            <p>Connect directly with verified suppliers, get bulk discounts, and ensure quality ingredients for your food business.</p>
+            <div class="hero-buttons">
+                <a href="{% url 'accounts:signup' %}" class="btn btn-primary">Get Started</a>
+                <a href="#how-it-works" class="btn btn-secondary">How It Works</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="{% static 'images/hero-image.svg' %}" alt="Food delivery and business connection">
+        </div>
+    </section>
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>Why Choose StreetEats Connect?</h2>
+            <p>Our platform solves key challenges faced by street food vendors</p>
+        </div>
+        <div class="feature-cards">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-certificate"></i>
+                </div>
+                <h3>Verified Suppliers</h3>
+                <p>Connect with FSSAI certified suppliers with transparent ratings and reviews</p>
+            </div>
+            <div class="feature-card highlight">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Group Buying Power</h3>
+                <p>Join other vendors to place bulk orders and get wholesale prices</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <h3>Direct Delivery</h3>
+                <p>Get materials delivered to your stall with temperature-controlled options</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
+                <h3>Easy Micro-Credit</h3>
+                <p>Simple access to PM SVANidhi loans to fund your purchases</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Quality Assurance</h3>
+                <p>Digital quality checks and robust feedback system</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Easy to Use</h3>
+                <p>Simple interface designed for vendors with all literacy levels</p>
+            </div>
+        </div>
+    </section>
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-header">
+            <h2>How It Works</h2>
+            <p>Simple steps to get started with StreetEats Connect</p>
+        </div>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Sign Up</h3>
+                    <p>Create your vendor profile with basic details and your food business type</p>
+                </div>
+                <div class="step-image">
+                    <img src="{% static 'images/signup-illustration.svg' %}" alt="Sign Up Process">
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Search Suppliers</h3>
+                    <p>Browse verified suppliers based on your raw material needs</p>
+                </div>
+                <div class="step-image">
+                    <img src="{% static 'images/search-illustration.svg' %}" alt="Search Suppliers">
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Place Orders</h3>
+                    <p>Order individually or join group orders for better prices</p>
+                </div>
+                <div class="step-image">
+                    <img src="{% static 'images/order-illustration.svg' %}" alt="Place Orders">
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Receive Delivery</h3>
+                    <p>Get quality materials delivered directly to your stall</p>
+                </div>
+                <div class="step-image">
+                    <img src="{% static 'images/delivery-illustration.svg' %}" alt="Receive Delivery">
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Group Buying Section -->
+    <section class="group-buying" id="group-buying">
+        <div class="section-header">
+            <h2>Group Buying Power</h2>
+            <p>Join forces with other vendors to get wholesale prices</p>
+        </div>
+        <div class="group-buying-content">
+            <div class="group-buying-image">
+                <img src="{% static 'images/group-buying.svg' %}" alt="Group Buying Illustration">
+            </div>
+            <div class="group-buying-info">
+                <h3>How Group Buying Works</h3>
+                <ul class="benefits-list">
+                    <li><i class="fas fa-check"></i> Join existing group orders in your area</li>
+                    <li><i class="fas fa-check"></i> Create new group orders for specific items</li>
+                    <li><i class="fas fa-check"></i> Get 15-30% discounts on bulk purchases</li>
+                    <li><i class="fas fa-check"></i> Split delivery costs with other vendors</li>
+                    <li><i class="fas fa-check"></i> Automated payment splitting</li>
+                </ul>
+                <a href="group-buying.html" class="btn btn-primary">Explore Active Group Orders</a>
+            </div>
+        </div>
+    </section>
+    <!-- Delivery Section -->
+    <section class="delivery" id="delivery">
+        <div class="section-header">
+            <h2>Integrated Logistics & Delivery</h2>
+            <p>Save time and ensure quality with our delivery service</p>
+        </div>
+        <div class="delivery-features">
+            <div class="delivery-feature">
+                <div class="delivery-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>Scheduled Deliveries</h3>
+                <p>Get regular deliveries on your preferred days and times</p>
+            </div>
+            <div class="delivery-feature">
+                <div class="delivery-icon">
+                    <i class="fas fa-temperature-low"></i>
+                </div>
+                <h3>Temperature Control</h3>
+                <p>Special handling for perishable items like dairy and meat</p>
+            </div>
+            <div class="delivery-feature">
+                <div class="delivery-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h3>Direct to Stall</h3>
+                <p>No more market trips - we deliver right to your location</p>
+            </div>
+            <div class="delivery-feature">
+                <div class="delivery-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Quality Guarantee</h3>
+                <p>Inspect items on delivery and return if not satisfied</p>
+            </div>
+        </div>
+    </section>
+    <!-- Micro-Credit Section -->
+    <section class="micro-credit" id="credit">
+        <div class="section-header">
+            <h2>Easy Access to Micro-Credit</h2>
+            <p>Get financial support to grow your food business</p>
+        </div>
+        <div class="credit-content">
+            <div class="credit-info">
+                <h3>PM SVANidhi Loan Integration</h3>
+                <p>We simplify the process of applying for the government's PM SVANidhi loan scheme designed specifically for street vendors.</p>
+                <ul class="benefits-list">
+                    <li><i class="fas fa-check"></i> Collateral-free loans up to ₹10,000</li>
+                    <li><i class="fas fa-check"></i> Guided application process within the app</li>
+                    <li><i class="fas fa-check"></i> Document assistance and verification</li>
+                    <li><i class="fas fa-check"></i> Digital repayment options</li>
+                    <li><i class="fas fa-check"></i> Cashback on digital transactions</li>
+                </ul>
+                <a href="micro-credit.html" class="btn btn-primary">Learn More About PM SVANidhi</a>
+            </div>
+            <div class="credit-image">
+                <img src="{% static 'images/micro-credit.svg' %}" alt="Micro-Credit Illustration">
+            </div>
+        </div>
+    </section>
+    <!-- Quality Assurance Section -->
+    <section class="quality-assurance" id="quality">
+        <div class="section-header">
+            <h2>Quality Assurance & Traceability</h2>
+            <p>Ensuring the highest standards for your raw materials</p>
+        </div>
+        <div class="quality-content">
+            <div class="quality-image">
+                <img src="{% static 'images/quality-assurance.svg' %}" alt="Quality Assurance Illustration">
+            </div>
+            <div class="quality-info">
+                <h3>Our Quality Control System</h3>
+                <p>We implement robust measures to ensure you receive only the best quality ingredients for your food business.</p>
+                <ul class="benefits-list">
+                    <li><i class="fas fa-check"></i> Digital quality checks with supplier photo/video uploads</li>
+                    <li><i class="fas fa-check"></i> Robust vendor feedback and rating system</li>
+                    <li><i class="fas fa-check"></i> Simple rapid testing kits for vendors</li>
+                    <li><i class="fas fa-check"></i> Community-driven quality control</li>
+                    <li><i class="fas fa-check"></i> Future blockchain implementation for end-to-end traceability</li>
+                </ul>
+                <a href="quality-assurance.html" class="btn btn-primary">Learn More About Quality Control</a>
+            </div>
+        </div>
+    </section>
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="section-header">
+            <h2>What Vendors Say</h2>
+            <p>Success stories from street food vendors using our platform</p>
+        </div>
+        <div class="testimonial-slider">
+            <div class="testimonial-slide">
+                <div class="testimonial-content">
+                    <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
+                    <p>"Since joining StreetEats Connect, I've been able to get better quality vegetables at lower prices. The group buying feature has saved me at least ₹2000 per week!"</p>
+                    <div class="testimonial-author">
+                        <img src="{% static 'images/vendor1.svg' %}" alt="Happy vendor testimonial">
+                        <div class="author-info">
+                            <h4>Ramesh Kumar</h4>
+                            <p>Pav Bhaji Vendor, Mumbai</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-slide">
+                <div class="testimonial-content">
+                    <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
+                    <p>"The delivery service saves me 3 hours every day that I used to spend at the wholesale market. Now I can focus on my customers and improve my food quality."</p>
+                    <div class="testimonial-author">
+                        <img src="{% static 'images/vendor2.svg' %}" alt="Satisfied customer testimonial">
+                        <div class="author-info">
+                            <h4>Lakshmi Devi</h4>
+                            <p>Dosa Stall Owner, Bangalore</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-slide">
+                <div class="testimonial-content">
+                    <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
+                    <p>"I was able to get the PM SVANidhi loan through the app in just 5 days. The process was so simple, and now I can buy better ingredients for my chaat stall."</p>
+                    <div class="testimonial-author">
+                        <img src="{% static 'images/vendor3.svg' %}" alt="Success story testimonial">
+                        <div class="author-info">
+                            <h4>Ahmed Khan</h4>
+                            <p>Chaat Vendor, Delhi</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slider-controls">
+            <button class="prev-btn"><i class="fas fa-chevron-left"></i></button>
+            <div class="slider-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+            <button class="next-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-content">
+            <h2>Ready to Transform Your Food Business?</h2>
+            <p>Join thousands of street food vendors already benefiting from our platform</p>
+            <div class="cta-buttons">
+                <a href="{% url 'accounts:signup' %}" class="btn btn-primary">Sign Up Now</a>
+                <a href="#contact" class="btn btn-outline">Contact Us</a>
+            </div>
+        </div>
+    </section>
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="section-header">
+            <h2>Contact Us</h2>
+            <p>Have questions? We're here to help</p>
+        </div>
+        <div class="contact-container">
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <div>
+                        <h3>Call Us</h3>
+                        <p>+91 1234567890</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <h3>Email Us</h3>
+                        <p>support@streeteatsconnect.com</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <h3>Visit Us</h3>
+                        <p>123 Innovation Street, Tech Hub, Bangalore - 560001</p>
+                    </div>
+                </div>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="contact-form">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" name="message" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock %}

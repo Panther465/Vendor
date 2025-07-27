@@ -1,0 +1,488 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Add Delivery Availability - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .availability-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+
+    .availability-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .card-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 1rem;
+    }
+
+    .card-header h1 {
+        color: #2c3e50;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-header p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .section-title i {
+        color: #667eea;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 0.75rem;
+        border: 2px solid #e1e5e9;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+    }
+
+    .location-section {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .location-display {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 1rem;
+        margin: 1rem 0;
+        font-family: monospace;
+        font-size: 0.9rem;
+    }
+
+    .get-location-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .get-location-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+    }
+
+    .get-location-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    .checkbox-group {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        border: 2px solid #e1e5e9;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .checkbox-item:hover {
+        border-color: #667eea;
+        background: rgba(102,126,234,0.05);
+    }
+
+    .checkbox-item input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        accent-color: #667eea;
+    }
+
+    .checkbox-item.checked {
+        border-color: #667eea;
+        background: rgba(102,126,234,0.1);
+    }
+
+    .container-details {
+        margin-left: 2.75rem;
+        margin-top: 0.5rem;
+        display: none;
+    }
+
+    .container-details.show {
+        display: block;
+    }
+
+    .container-details input {
+        width: 150px;
+        margin-top: 0.5rem;
+    }
+
+    .submit-btn {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 2rem;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102,126,234,0.3);
+    }
+
+    .submit-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+
+    .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .alert-error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    @media (max-width: 768px) {
+        .availability-container {
+            padding: 0 1rem;
+            margin: 1rem auto;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .card-header h1 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="availability-container">
+    <div class="availability-card">
+        <div class="card-header">
+            <h1>🚚 Add Delivery Availability</h1>
+            <p>Set your delivery preferences and start receiving orders</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" id="availabilityForm">
+            {% csrf_token %}
+            
+            <!-- Location Section -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Current Location
+                </div>
+                <div class="location-section">
+                    <p style="margin-bottom: 1rem; color: #666;">
+                        Click the button below to capture your current location for delivery services.
+                    </p>
+                    <button type="button" class="get-location-btn" onclick="getCurrentLocation()">
+                        <i class="fas fa-crosshairs"></i>
+                        Get Current Location
+                    </button>
+                    <div class="location-display" id="locationDisplay" style="display: none;">
+                        <div><strong>Latitude:</strong> <span id="latDisplay">-</span></div>
+                        <div><strong>Longitude:</strong> <span id="lngDisplay">-</span></div>
+                        <div style="margin-top: 0.5rem; color: #28a745; font-weight: 600;">
+                            <i class="fas fa-check-circle"></i> Location captured successfully!
+                        </div>
+                    </div>
+                    <input type="hidden" name="current_latitude" id="currentLatitude">
+                    <input type="hidden" name="current_longitude" id="currentLongitude">
+                </div>
+            </div>
+
+            <!-- Delivery Details -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-truck"></i>
+                    Delivery Details
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="price_per_kg">Price per KG (₹)</label>
+                        <input type="number" name="price_per_kg" id="price_per_kg" 
+                               step="0.01" min="0" value="{{ availability.price_per_kg|default:'5.00' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="max_weight_capacity">Max Weight Capacity (KG)</label>
+                        <input type="number" name="max_weight_capacity" id="max_weight_capacity" 
+                               step="0.01" min="1" value="{{ availability.max_weight_capacity|default:'50.00' }}" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="availability_radius">Delivery Radius (KM)</label>
+                        <input type="number" name="availability_radius" id="availability_radius" 
+                               min="1" max="50" value="{{ availability.availability_radius|default:'10' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="estimated_delivery_time">Estimated Delivery Time</label>
+                        <select name="estimated_delivery_time" id="estimated_delivery_time" required>
+                            <option value="1-2 hours" {% if availability.estimated_delivery_time == '1-2 hours' %}selected{% endif %}>1-2 hours</option>
+                            <option value="2-4 hours" {% if availability.estimated_delivery_time == '2-4 hours' or not availability %}selected{% endif %}>2-4 hours</option>
+                            <option value="4-6 hours" {% if availability.estimated_delivery_time == '4-6 hours' %}selected{% endif %}>4-6 hours</option>
+                            <option value="Same day" {% if availability.estimated_delivery_time == 'Same day' %}selected{% endif %}>Same day</option>
+                            <option value="Next day" {% if availability.estimated_delivery_time == 'Next day' %}selected{% endif %}>Next day</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="description">Service Description (Optional)</label>
+                    <textarea name="description" id="description" rows="3" 
+                              placeholder="Brief description of your delivery services...">{{ availability.description }}</textarea>
+                </div>
+            </div>
+
+            <!-- Container Options -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-box"></i>
+                    Container Options
+                </div>
+                <div class="checkbox-group">
+                    <div class="checkbox-item" onclick="toggleCheckbox('normal_container')">
+                        <input type="checkbox" name="normal_container_available" id="normal_container" 
+                               {% if availability.normal_container_available or not availability %}checked{% endif %}>
+                        <div>
+                            <strong>📦 Normal Container</strong>
+                            <div style="font-size: 0.9rem; color: #666;">Standard packaging for regular items</div>
+                        </div>
+                    </div>
+                    
+                    <div class="checkbox-item" onclick="toggleCheckbox('cold_container')">
+                        <input type="checkbox" name="cold_container_available" id="cold_container" 
+                               {% if availability.cold_container_available %}checked{% endif %}>
+                        <div>
+                            <strong>❄️ Cold Container</strong>
+                            <div style="font-size: 0.9rem; color: #666;">Temperature controlled for fresh produce</div>
+                        </div>
+                    </div>
+                    <div class="container-details" id="cold_container_details">
+                        <label for="cold_container_extra_charge">Extra Charge for Cold Container (₹)</label>
+                        <input type="number" name="cold_container_extra_charge" id="cold_container_extra_charge" 
+                               step="0.01" min="0" value="{{ availability.cold_container_extra_charge|default:'25.00' }}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Availability Status -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-toggle-on"></i>
+                    Availability Status
+                </div>
+                <div class="checkbox-item" onclick="toggleCheckbox('is_available')">
+                    <input type="checkbox" name="is_available" id="is_available" 
+                           {% if availability.is_available %}checked{% endif %}>
+                    <div>
+                        <strong>🟢 Available for Deliveries</strong>
+                        <div style="font-size: 0.9rem; color: #666;">Check this to start receiving delivery requests</div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-save"></i>
+                {% if availability %}Update Availability{% else %}Add Availability{% endif %}
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+function getCurrentLocation() {
+    const btn = document.querySelector('.get-location-btn');
+    const originalText = btn.innerHTML;
+    
+    if (navigator.geolocation) {
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting Location...';
+        btn.disabled = true;
+        
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                
+                document.getElementById('currentLatitude').value = lat;
+                document.getElementById('currentLongitude').value = lng;
+                document.getElementById('latDisplay').textContent = lat.toFixed(6);
+                document.getElementById('lngDisplay').textContent = lng.toFixed(6);
+                document.getElementById('locationDisplay').style.display = 'block';
+                
+                btn.innerHTML = '<i class="fas fa-check"></i> Location Captured';
+                btn.style.background = '#28a745';
+                btn.disabled = false;
+            },
+            function(error) {
+                alert('Error getting location: ' + error.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        );
+    } else {
+        alert('Geolocation is not supported by this browser.');
+    }
+}
+
+function toggleCheckbox(checkboxId) {
+    const checkbox = document.getElementById(checkboxId);
+    checkbox.checked = !checkbox.checked;
+    
+    // Handle container details visibility
+    if (checkboxId === 'cold_container') {
+        const details = document.getElementById('cold_container_details');
+        if (checkbox.checked) {
+            details.classList.add('show');
+        } else {
+            details.classList.remove('show');
+        }
+    }
+    
+    // Update checkbox item styling
+    const checkboxItem = checkbox.closest('.checkbox-item');
+    if (checkbox.checked) {
+        checkboxItem.classList.add('checked');
+    } else {
+        checkboxItem.classList.remove('checked');
+    }
+}
+
+// Initialize checkbox styling on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.checkbox-item input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        const checkboxItem = checkbox.closest('.checkbox-item');
+        if (checkbox.checked) {
+            checkboxItem.classList.add('checked');
+        }
+        
+        // Show cold container details if checked
+        if (checkbox.id === 'cold_container' && checkbox.checked) {
+            document.getElementById('cold_container_details').classList.add('show');
+        }
+    });
+});
+
+// Form validation
+document.getElementById('availabilityForm').addEventListener('submit', function(e) {
+    const latitude = document.getElementById('currentLatitude').value;
+    const longitude = document.getElementById('currentLongitude').value;
+    
+    if (!latitude || !longitude) {
+        e.preventDefault();
+        alert('Please capture your current location before submitting.');
+        return;
+    }
+});
+</script>
+{% endblock %}

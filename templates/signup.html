@@ -1,0 +1,923 @@
+{% extends "auth_base.html" %}
+{% load static %}
+
+{% block title %}Sign Up - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: white;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .signup-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        overflow: hidden;
+        width: 100%;
+        max-width: 1000px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        height: 85vh;
+        max-height: 700px;
+    }
+
+    .signup-image {
+        background: linear-gradient(135deg, #2f43a5, #1e2d6b);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 25px;
+        color: white;
+        text-align: center;
+    }
+
+    .signup-image img {
+        width: 150px;
+        height: 150px;
+        margin-bottom: 20px;
+    }
+
+    .signup-image h2 {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .signup-image p {
+        font-size: 1rem;
+        opacity: 0.9;
+        line-height: 1.5;
+    }
+
+    .signup-form-container {
+        padding: 30px 25px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        overflow-y: auto;
+        height: 100%;
+    }
+
+    /* Custom Scrollbar */
+    .signup-form-container::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .signup-form-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .signup-form-container::-webkit-scrollbar-thumb {
+        background: #2f43a5;
+        border-radius: 10px;
+    }
+
+    .signup-form-container::-webkit-scrollbar-thumb:hover {
+        background: #1e2d6b;
+    }
+
+    .signup-header {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .signup-header h2 {
+        font-size: 1.8rem;
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+
+    .signup-header p {
+        color: #666;
+        font-size: 1rem;
+    }
+
+    .user-type-selector {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+        background: #f8f9fa;
+        padding: 8px;
+        border-radius: 12px;
+    }
+
+    .user-type-option {
+        flex: 1;
+        padding: 15px;
+        border: none;
+        border-radius: 8px;
+        background: transparent;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .user-type-option.active {
+        background: white;
+        color: #2f43a5;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        font-weight: 600;
+    }
+
+    .user-type-option i {
+        font-size: 1.5rem;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .input-with-icon {
+        position: relative;
+    }
+
+    .input-with-icon i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+        font-size: 1rem;
+    }
+
+    .input-with-icon input, .input-with-icon select {
+        width: 100%;
+        padding: 12px 12px 12px 45px;
+        border: 2px solid #e1e8ed;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+    .input-with-icon input:focus, .input-with-icon select:focus {
+        outline: none;
+        border-color: #2f43a5;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
+    }
+
+    .location-section {
+        margin-bottom: 25px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border: 2px dashed #ddd;
+    }
+
+    .location-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .location-header i {
+        color: #2f43a5;
+        font-size: 1.2rem;
+    }
+
+    .location-btn {
+        width: 100%;
+        padding: 12px;
+        background: #2f43a5;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .location-btn:hover {
+        background: #1e2d6b;
+    }
+
+    .location-display {
+        margin-top: 15px;
+        padding: 10px;
+        background: white;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: #666;
+        display: none;
+    }
+
+    .location-display.show {
+        display: block;
+    }
+
+    .vendor-fields, .delivery-fields {
+        display: none;
+    }
+
+    .vendor-fields.show, .delivery-fields.show {
+        display: block;
+    }
+
+    .btn-signup {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #2f43a5, #1e2d6b);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+
+    .btn-signup:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(255,107,53,0.3);
+    }
+
+    .auth-footer {
+        text-align: center;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .auth-footer a {
+        color: #2f43a5;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        body {
+            padding: 10px;
+        }
+
+        .signup-container {
+            grid-template-columns: 1fr;
+            max-width: 400px;
+            min-height: auto;
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+
+        .signup-image {
+            display: none;
+        }
+
+        .signup-form-container {
+            padding: 20px 15px;
+        }
+
+        .signup-header {
+            margin-bottom: 20px;
+        }
+
+        .signup-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+            gap: 0;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .user-type-selector {
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .user-type-option {
+            flex-direction: row;
+            justify-content: center;
+            padding: 12px;
+        }
+
+        .location-section {
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+
+        .input-with-icon input, .input-with-icon select {
+            padding: 10px 10px 10px 40px;
+            font-size: 0.85rem;
+        }
+
+        .input-with-icon i {
+            left: 12px;
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (min-height: 900px) {
+        .signup-container {
+            max-height: 800px;
+        }
+        
+        .signup-form-container {
+            padding: 35px 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-row {
+            margin-bottom: 25px;
+        }
+        
+        .signup-header {
+            margin-bottom: 30px;
+        }
+        
+        .user-type-selector {
+            margin-bottom: 30px;
+        }
+    }
+
+    /* Location Popup Styles */
+    .location-popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .location-popup-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .location-popup {
+        background: white;
+        border-radius: 12px;
+        max-width: 320px;
+        width: 90%;
+        padding: 24px 20px 20px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        transform: scale(0.8) translateY(20px);
+        transition: all 0.3s ease;
+    }
+
+    .location-popup-overlay.show .location-popup {
+        transform: scale(1) translateY(0);
+    }
+
+    .location-icon {
+        font-size: 2rem;
+        color: #2f43a5;
+        margin-bottom: 12px;
+    }
+
+    .location-popup h4 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0 0 8px 0;
+    }
+
+    .location-popup p {
+        font-size: 0.85rem;
+        color: #7f8c8d;
+        line-height: 1.4;
+        margin: 0 0 20px 0;
+    }
+
+    .popup-buttons {
+        display: flex;
+        gap: 8px;
+    }
+
+    .btn-skip, .btn-allow {
+        flex: 1;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-skip {
+        background: #f8f9fa;
+        color: #6c757d;
+    }
+
+    .btn-skip:hover {
+        background: #e9ecef;
+    }
+
+    .btn-allow {
+        background: #2f43a5;
+        color: white;
+    }
+
+    .btn-allow:hover {
+        background: #1e2d6b;
+        transform: translateY(-1px);
+    }
+
+    @media (max-width: 768px) {
+        .location-popup {
+            max-width: 300px;
+            width: 85%;
+            padding: 20px 16px 16px;
+        }
+
+        .location-popup h4 {
+            font-size: 1rem;
+        }
+
+        .location-popup p {
+            font-size: 0.8rem;
+        }
+
+        .btn-skip, .btn-allow {
+            padding: 9px 14px;
+            font-size: 0.8rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Location Permission Popup -->
+<div id="locationPopup" class="location-popup-overlay">
+    <div class="location-popup">
+        <i class="fas fa-map-marker-alt location-icon"></i>
+        <h4>Enable Location Access</h4>
+        <p>We need your location to show nearby vendors and provide accurate delivery services.</p>
+        <div class="popup-buttons">
+            <button id="skipLocationBtn" class="btn-skip">Not Now</button>
+            <button id="allowLocationBtn" class="btn-allow">Allow Location</button>
+        </div>
+    </div>
+</div>
+
+<div class="signup-container">
+    <div class="signup-image">
+        <img src="{% static 'images/signup-illustration.svg' %}" alt="Signup Illustration">
+        <h2>Join Our Network!</h2>
+        <p>Connect with verified suppliers and delivery partners to grow your food business</p>
+    </div>
+    
+    <div class="signup-form-container">
+        <div class="signup-header">
+            <h2>Create Your Account</h2>
+            <p>Choose your account type and fill in your details</p>
+        </div>
+
+        <form method="post" id="signupForm" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- User Type Selector -->
+            <div class="user-type-selector">
+                <button type="button" class="user-type-option active" data-type="vendor">
+                    <i class="fas fa-store"></i>
+                    <span>Vendor</span>
+                </button>
+                <button type="button" class="user-type-option" data-type="delivery">
+                    <i class="fas fa-motorcycle"></i>
+                    <span>Delivery Partner</span>
+                </button>
+            </div>
+            
+            <input type="hidden" name="user_type" id="user_type" value="vendor">
+
+            <!-- Basic Information -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="first_name" name="first_name" placeholder="Enter first name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="last_name" name="last_name" placeholder="Enter last name" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-at"></i>
+                        <input type="text" id="username" name="username" placeholder="Choose username" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" name="email" placeholder="Enter email" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="phone_number">Phone Number</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="phone_number" name="phone_number" placeholder="Enter phone number" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" placeholder="Create password" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm password" required>
+                </div>
+            </div>
+
+            <!-- Vendor Specific Fields -->
+            <div class="vendor-fields show" id="vendorFields">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="business_name">Business Name</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-building"></i>
+                            <input type="text" id="business_name" name="business_name" placeholder="Enter business name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="business_type">Business Type</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-tags"></i>
+                            <input type="text" id="business_type" name="business_type" placeholder="e.g., Restaurant, Cafe">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="business_address">Business Address</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <input type="text" id="business_address" name="business_address" placeholder="Enter business address">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="business_phone">Business Phone</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-phone-alt"></i>
+                            <input type="tel" id="business_phone" name="business_phone" placeholder="Business phone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="business_email">Business Email</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="business_email" name="business_email" placeholder="Business email">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Partner Specific Fields -->
+            <div class="delivery-fields" id="deliveryFields">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="vehicle_type">Vehicle Type</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-motorcycle"></i>
+                            <select id="vehicle_type" name="vehicle_type">
+                                <option value="">Select Vehicle</option>
+                                <option value="bike">Bike</option>
+                                <option value="scooter">Scooter</option>
+                                <option value="bicycle">Bicycle</option>
+                                <option value="car">Car</option>
+                                <option value="van">Van</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="vehicle_number">Vehicle Number</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-id-card"></i>
+                            <input type="text" id="vehicle_number" name="vehicle_number" placeholder="Enter vehicle number">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="license_number">License Number</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-id-badge"></i>
+                            <input type="text" id="license_number" name="license_number" placeholder="Enter license number">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="delivery_radius">Delivery Radius (km)</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-circle"></i>
+                            <input type="number" id="delivery_radius" name="delivery_radius" placeholder="10" value="10" min="1" max="50">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location Section -->
+            <div class="location-section">
+                <div class="location-header">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Current Location</span>
+                </div>
+                <button type="button" class="location-btn" onclick="getCurrentLocation()">
+                    <i class="fas fa-crosshairs"></i> Get Current Location
+                </button>
+                <div class="location-display" id="locationDisplay">
+                    <strong>Location:</strong> <span id="locationText"></span>
+                </div>
+                <input type="hidden" name="latitude" id="latitude">
+                <input type="hidden" name="longitude" id="longitude">
+            </div>
+
+            <button type="submit" class="btn-signup">
+                <i class="fas fa-user-plus"></i> Create Account
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Already have an account? <a href="{% url 'accounts:login' %}">Login</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Show location popup on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if location was already captured in this session
+    if (!sessionStorage.getItem('locationCaptured')) {
+        setTimeout(() => {
+            document.getElementById('locationPopup').classList.add('show');
+        }, 1000);
+    }
+});
+
+// Location popup functionality
+document.getElementById('allowLocationBtn').addEventListener('click', function() {
+    requestLocation();
+});
+
+document.getElementById('skipLocationBtn').addEventListener('click', function() {
+    document.getElementById('locationPopup').classList.remove('show');
+    sessionStorage.setItem('locationSkipped', 'true');
+});
+
+// User type selection
+document.querySelectorAll('.user-type-option').forEach(option => {
+    option.addEventListener('click', function() {
+        document.querySelectorAll('.user-type-option').forEach(opt => opt.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById('user_type').value = this.dataset.type;
+        
+        // Show/hide specific fields
+        const vendorFields = document.getElementById('vendorFields');
+        const deliveryFields = document.getElementById('deliveryFields');
+        
+        if (this.dataset.type === 'vendor') {
+            vendorFields.classList.add('show');
+            deliveryFields.classList.remove('show');
+            // Make vendor fields required
+            vendorFields.querySelectorAll('input').forEach(input => {
+                if (input.id !== 'business_type') input.required = true;
+            });
+            // Make delivery fields not required
+            deliveryFields.querySelectorAll('input, select').forEach(input => {
+                input.required = false;
+            });
+        } else {
+            deliveryFields.classList.add('show');
+            vendorFields.classList.remove('show');
+            // Make delivery fields required
+            deliveryFields.querySelectorAll('input, select').forEach(input => {
+                input.required = true;
+            });
+            // Make vendor fields not required
+            vendorFields.querySelectorAll('input').forEach(input => {
+                input.required = false;
+            });
+        }
+    });
+});
+
+// Location functionality
+function requestLocation() {
+    const allowBtn = document.getElementById('allowLocationBtn');
+    
+    if (navigator.geolocation) {
+        allowBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting Location...';
+        allowBtn.disabled = true;
+        
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                
+                document.getElementById('latitude').value = lat;
+                document.getElementById('longitude').value = lng;
+                
+                // Update location display
+                const locationText = document.getElementById('locationText');
+                locationText.textContent = `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`;
+                document.getElementById('locationDisplay').classList.add('show');
+                
+                // Update location button
+                const locationBtn = document.querySelector('.location-btn');
+                locationBtn.innerHTML = '<i class="fas fa-check"></i> Location Captured';
+                locationBtn.style.background = '#28a745';
+                locationBtn.disabled = true;
+                
+                // Hide popup and mark as captured
+                document.getElementById('locationPopup').classList.remove('show');
+                sessionStorage.setItem('locationCaptured', 'true');
+                
+                // Show success message
+                showLocationSuccess();
+            },
+            function(error) {
+                allowBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Location Access Denied';
+                allowBtn.disabled = false;
+                
+                setTimeout(() => {
+                    allowBtn.innerHTML = '<i class="fas fa-check"></i> Allow Location';
+                    allowBtn.disabled = false;
+                }, 2000);
+                
+                console.error('Error getting location:', error.message);
+            }
+        );
+    } else {
+        alert('Geolocation is not supported by this browser.');
+        allowBtn.disabled = false;
+    }
+}
+
+function getCurrentLocation() {
+    const locationBtn = document.querySelector('.location-btn');
+    const locationDisplay = document.getElementById('locationDisplay');
+    const locationText = document.getElementById('locationText');
+    
+    if (navigator.geolocation) {
+        locationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting Location...';
+        locationBtn.disabled = true;
+        
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                
+                document.getElementById('latitude').value = lat;
+                document.getElementById('longitude').value = lng;
+                
+                // Reverse geocoding (you can implement this with Google Maps API)
+                locationText.textContent = `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`;
+                locationDisplay.classList.add('show');
+                
+                locationBtn.innerHTML = '<i class="fas fa-check"></i> Location Captured';
+                locationBtn.style.background = '#28a745';
+                
+                sessionStorage.setItem('locationCaptured', 'true');
+                showLocationSuccess();
+            },
+            function(error) {
+                alert('Error getting location: ' + error.message);
+                locationBtn.innerHTML = '<i class="fas fa-crosshairs"></i> Get Current Location';
+                locationBtn.disabled = false;
+            }
+        );
+    } else {
+        alert('Geolocation is not supported by this browser.');
+    }
+}
+
+function showLocationSuccess() {
+    // Create and show a temporary success message
+    const successMsg = document.createElement('div');
+    successMsg.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        z-index: 10001;
+        font-weight: 600;
+        transform: translateX(100%);
+        transition: all 0.3s ease;
+    `;
+    successMsg.innerHTML = '<i class="fas fa-check-circle"></i> Location captured successfully!';
+    document.body.appendChild(successMsg);
+    
+    setTimeout(() => {
+        successMsg.style.transform = 'translateX(0)';
+    }, 100);
+    
+    setTimeout(() => {
+        successMsg.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            document.body.removeChild(successMsg);
+        }, 300);
+    }, 3000);
+}
+
+// Form submission
+document.getElementById('signupForm').addEventListener('submit', function(e) {
+    const lat = document.getElementById('latitude').value;
+    const lng = document.getElementById('longitude').value;
+    
+    if (!lat || !lng) {
+        e.preventDefault();
+        
+        // Show location popup if not captured
+        if (!sessionStorage.getItem('locationSkipped')) {
+            document.getElementById('locationPopup').classList.add('show');
+        } else {
+            alert('Please capture your current location before signing up.');
+        }
+        return;
+    }
+});
+
+// Close popup when clicking outside
+document.getElementById('locationPopup').addEventListener('click', function(e) {
+    if (e.target === this) {
+        this.classList.remove('show');
+        sessionStorage.setItem('locationSkipped', 'true');
+    }
+});
+</script>
+{% endblock %}

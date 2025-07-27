@@ -1,0 +1,565 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Group Buying Cart - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cart-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding: 2rem;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border-radius: var(--border-radius-lg);
+    }
+
+    .page-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+
+    .group-info {
+        background: white;
+        border-radius: var(--border-radius-lg);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-color);
+    }
+
+    .group-info h3 {
+        color: var(--secondary-color);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .participants-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .participant-tag {
+        background: var(--primary-color);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .cart-grid {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 2rem;
+    }
+
+    .cart-items {
+        background: white;
+        border-radius: var(--border-radius-lg);
+        padding: 2rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-color);
+    }
+
+    .cart-summary {
+        background: white;
+        border-radius: var(--border-radius-lg);
+        padding: 2rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-color);
+        height: fit-content;
+        position: sticky;
+        top: 2rem;
+    }
+
+    .cart-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.5rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        margin-bottom: 1rem;
+        background: #f9f9f9;
+    }
+
+    .item-image {
+        width: 80px;
+        height: 80px;
+        background: var(--bg-light);
+        border-radius: var(--border-radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+    }
+
+    .item-details {
+        flex: 1;
+    }
+
+    .item-name {
+        font-weight: 600;
+        color: var(--secondary-color);
+        font-size: 1.1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .item-supplier {
+        color: var(--text-light);
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .item-added-by {
+        color: var(--primary-color);
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .item-quantity {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0.5rem 0;
+    }
+
+    .quantity-btn {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+
+    .quantity-btn:hover {
+        background: var(--primary-dark);
+    }
+
+    .quantity-input {
+        width: 60px;
+        text-align: center;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-sm);
+        padding: 0.25rem;
+    }
+
+    .item-price {
+        text-align: right;
+        min-width: 100px;
+    }
+
+    .price-original {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--secondary-color);
+    }
+
+    .price-unit {
+        font-size: 0.8rem;
+        color: var(--text-light);
+    }
+
+    .remove-btn {
+        background: var(--danger-color);
+        color: white;
+        border: none;
+        padding: 0.5rem;
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .remove-btn:hover {
+        background: #c82333;
+    }
+
+    .summary-section {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .summary-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+
+    .summary-section h4 {
+        color: var(--secondary-color);
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+    }
+
+    .summary-row.total {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: var(--secondary-color);
+        border-top: 2px solid var(--primary-color);
+        padding-top: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .discount-highlight {
+        color: var(--success-color);
+        font-weight: 600;
+    }
+
+    .group-discount-badge {
+        background: var(--success-color);
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+    }
+
+    .delivery-options {
+        background: #f8f9fa;
+        border-radius: var(--border-radius-md);
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .delivery-option {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .delivery-option input[type="radio"] {
+        accent-color: var(--primary-color);
+    }
+
+    .delivery-option label {
+        font-weight: 500;
+        color: var(--text-color);
+    }
+
+    .delivery-details {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: white;
+        border-radius: var(--border-radius-sm);
+        border: 1px solid var(--border-color);
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--border-radius-md);
+        text-decoration: none;
+        font-weight: 500;
+        text-align: center;
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        width: 100%;
+    }
+
+    .btn-primary {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-dark);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: var(--bg-dark);
+        color: var(--text-color);
+        margin-bottom: 1rem;
+    }
+
+    .btn-secondary:hover {
+        background: #ddd;
+    }
+
+    .empty-cart {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-light);
+    }
+
+    .empty-cart i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        color: var(--text-lighter);
+    }
+
+    @media (max-width: 768px) {
+        .cart-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .cart-summary {
+            position: static;
+        }
+        
+        .cart-item {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .participants-list {
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="cart-container">
+    <div class="page-header">
+        <h1>🛒 Group Buying Cart</h1>
+        <p>Shopping together with {{ session.participants.count }} vendors</p>
+        <span class="group-discount-badge">10% Group Discount Applied!</span>
+    </div>
+
+    <div class="group-info">
+        <h3>👥 Group Session: {{ session.session_name }}</h3>
+        <div class="participants-list">
+            {% for participant in session.participants.all %}
+            <span class="participant-tag">
+                {{ participant.first_name }} {{ participant.last_name }}
+            </span>
+            {% endfor %}
+        </div>
+        <p><strong>Created by:</strong> {{ session.creator.first_name }} {{ session.creator.last_name }}</p>
+        <p><strong>Delivery Mode:</strong> 
+            {% if session.use_discrete_delivery %}
+                Discrete Delivery (Separate addresses)
+            {% else %}
+                Combined Delivery ({{ session.main_delivery_address|default:"Address to be set" }})
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="cart-grid">
+        <div class="cart-items">
+            <h2 style="color: var(--secondary-color); margin-bottom: 1.5rem;">
+                🛍️ Cart Items ({{ cart.total_items }})
+            </h2>
+
+            {% for item in cart.items.all %}
+            <div class="cart-item" data-item-id="{{ item.id }}">
+                <div class="item-image">
+                    📦
+                </div>
+                <div class="item-details">
+                    <div class="item-name">{{ item.product.name }}</div>
+                    <div class="item-supplier">From: {{ item.product.supplier.name }}</div>
+                    <div class="item-added-by">Added by: {{ item.added_by.first_name }}</div>
+                    
+                    <div class="item-quantity">
+                        <button class="quantity-btn" onclick="updateQuantity({{ item.id }}, -1)">-</button>
+                        <input type="number" class="quantity-input" value="{{ item.quantity }}" 
+                               onchange="updateQuantity({{ item.id }}, this.value, true)" min="1">
+                        <button class="quantity-btn" onclick="updateQuantity({{ item.id }}, 1)">+</button>
+                        <span style="margin-left: 0.5rem; color: var(--text-light);">{{ item.product.unit }}</span>
+                    </div>
+                </div>
+                <div class="item-price">
+                    <div class="price-original">₹{{ item.total_price }}</div>
+                    <div class="price-unit">₹{{ item.product.price }}/{{ item.product.unit }}</div>
+                </div>
+                <button class="remove-btn" onclick="removeItem({{ item.id }})">
+                    🗑️
+                </button>
+            </div>
+            {% empty %}
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>Your group cart is empty</h3>
+                <p>Start adding items from suppliers to begin group buying.</p>
+                <a href="{% url 'groupbuying:group_suppliers' session.id %}" class="btn btn-primary" style="width: auto; margin-top: 1rem;">
+                    Browse Suppliers
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if cart.items.all %}
+        <div class="cart-summary">
+            <div class="summary-section">
+                <h4>💰 Order Summary</h4>
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span>₹{{ cart.subtotal }}</span>
+                </div>
+                <div class="summary-row discount-highlight">
+                    <span>Group Discount (10%):</span>
+                    <span>-₹{{ cart.group_discount }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>After Discount:</span>
+                    <span>₹{{ cart.total_after_discount }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery Fee:</span>
+                    <span>₹50</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span>₹{{ cart.total_after_discount|add:50 }}</span>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h4>🚚 Delivery Options</h4>
+                <div class="delivery-options">
+                    {% if session.use_discrete_delivery %}
+                    <div class="delivery-option">
+                        <input type="radio" id="discrete" name="delivery_type" value="discrete" checked>
+                        <label for="discrete">Separate Delivery Addresses</label>
+                    </div>
+                    <div class="delivery-details">
+                        <p><strong>Note:</strong> Each vendor can set their own delivery address. Additional charges may apply.</p>
+                    </div>
+                    {% else %}
+                    <div class="delivery-option">
+                        <input type="radio" id="combined" name="delivery_type" value="combined" checked>
+                        <label for="combined">Combined Delivery</label>
+                    </div>
+                    <div class="delivery-details">
+                        <p><strong>Address:</strong> {{ session.main_delivery_address }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h4>🚛 Available Delivery Partners</h4>
+                <div style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 1rem;">
+                    3 delivery partners available in your area
+                </div>
+                <select class="form-control" style="margin-bottom: 1rem;">
+                    <option>Select Delivery Partner</option>
+                    <option>Raj Delivery Services - ₹50</option>
+                    <option>Quick Transport - ₹45</option>
+                    <option>City Express - ₹55</option>
+                </select>
+            </div>
+
+            <a href="{% url 'groupbuying:group_suppliers' session.id %}" class="btn btn-secondary">
+                Continue Shopping
+            </a>
+            <button class="btn btn-primary" onclick="proceedToCheckout()">
+                Proceed to Checkout
+            </button>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function updateQuantity(itemId, change, absolute = false) {
+    const quantityInput = document.querySelector(`[data-item-id="${itemId}"] .quantity-input`);
+    let newQuantity;
+    
+    if (absolute) {
+        newQuantity = parseInt(change);
+    } else {
+        newQuantity = parseInt(quantityInput.value) + change;
+    }
+    
+    if (newQuantity < 1) newQuantity = 1;
+    
+    // Update the input
+    quantityInput.value = newQuantity;
+    
+    // Send AJAX request to update quantity
+    fetch(`/group-buying/update-cart-item/${itemId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({
+            quantity: newQuantity
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update the item total price
+            const priceElement = document.querySelector(`[data-item-id="${itemId}"] .price-original`);
+            priceElement.textContent = `₹${data.item_total}`;
+            
+            // Reload page to update summary
+            location.reload();
+        } else {
+            alert('Error updating quantity');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error updating quantity');
+    });
+}
+
+function removeItem(itemId) {
+    if (confirm('Are you sure you want to remove this item from the group cart?')) {
+        fetch(`/group-buying/remove-cart-item/${itemId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error removing item');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error removing item');
+        });
+    }
+}
+
+function proceedToCheckout() {
+    // This would redirect to checkout page
+    alert('Checkout functionality will be implemented here. This will include:\n\n• Payment splitting between group members\n• Final delivery address confirmation\n• Order placement for all vendors');
+}
+</script>
+
+{% csrf_token %}
+{% endblock %}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="40" cy="40" r="40" fill="#F3F4F6"/>
+  
+  <!-- Abstract person representation -->
+  <circle cx="40" cy="30" r="12" fill="#F59E0B"/>
+  <circle cx="40" cy="28" r="8" fill="#FEF3C7"/>
+  
+  <!-- Body -->
+  <rect x="32" y="42" width="16" height="20" rx="8" fill="#3B82F6"/>
+  
+  <!-- Abstract decorative elements -->
+  <circle cx="25" cy="25" r="3" fill="#22C55E" opacity="0.7"/>
+  <circle cx="55" cy="35" r="2" fill="#EF4444" opacity="0.8"/>
+  <rect x="20" y="50" width="4" height="4" rx="1" fill="#8B5CF6" opacity="0.6" transform="rotate(45 22 52)"/>
+  
+  <!-- Success indicator -->
+  <circle cx="60" cy="20" r="8" fill="#22C55E"/>
+  <path d="M57 20 L59 22 L63 18" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+</svg>

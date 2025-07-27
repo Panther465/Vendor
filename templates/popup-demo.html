@@ -1,0 +1,356 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Popup Theme Demo - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<style>
+.demo-container {
+    max-width: 1000px;
+    margin: 100px auto 50px;
+    padding: 0 20px;
+}
+
+.demo-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.demo-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 10px;
+}
+
+.demo-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-light);
+}
+
+.demo-section {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+.demo-section h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.demo-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.demo-btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: var(--border-radius-md);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.demo-btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.demo-btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.demo-btn-success {
+    background: var(--success-color);
+    color: white;
+}
+
+.demo-btn-success:hover {
+    background: #229954;
+    transform: translateY(-2px);
+}
+
+.demo-btn-warning {
+    background: var(--warning-color);
+    color: white;
+}
+
+.demo-btn-warning:hover {
+    background: #d68910;
+    transform: translateY(-2px);
+}
+
+.demo-btn-danger {
+    background: var(--danger-color);
+    color: white;
+}
+
+.demo-btn-danger:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+}
+
+.demo-btn-info {
+    background: var(--info-color);
+    color: white;
+}
+
+.demo-btn-info:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+}
+
+.demo-description {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .demo-container {
+        margin-top: 80px;
+        padding: 0 15px;
+    }
+    
+    .demo-buttons {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="demo-container">
+    <div class="demo-header">
+        <h1 class="demo-title">
+            <i class="fas fa-palette"></i>
+            Themed Popup System Demo
+        </h1>
+        <p class="demo-subtitle">Experience the consistent, beautiful popups across StreetEats Connect</p>
+    </div>
+
+    <!-- Modal Popups Section -->
+    <div class="demo-section">
+        <h3>
+            <i class="fas fa-window-maximize"></i>
+            Modal Popups
+        </h3>
+        <p class="demo-description">
+            These are the main popup modals that appear for confirmations, alerts, and information display.
+        </p>
+        <div class="demo-buttons">
+            <button class="demo-btn demo-btn-info" onclick="showInfoAlert()">
+                <i class="fas fa-info-circle"></i>
+                Info Alert
+            </button>
+            <button class="demo-btn demo-btn-success" onclick="showSuccessAlert()">
+                <i class="fas fa-check-circle"></i>
+                Success Alert
+            </button>
+            <button class="demo-btn demo-btn-warning" onclick="showWarningAlert()">
+                <i class="fas fa-exclamation-triangle"></i>
+                Warning Alert
+            </button>
+            <button class="demo-btn demo-btn-danger" onclick="showErrorAlert()">
+                <i class="fas fa-times-circle"></i>
+                Error Alert
+            </button>
+        </div>
+    </div>
+
+    <!-- Confirmation Dialogs Section -->
+    <div class="demo-section">
+        <h3>
+            <i class="fas fa-question-circle"></i>
+            Confirmation Dialogs
+        </h3>
+        <p class="demo-description">
+            Interactive confirmation dialogs for user actions that require approval.
+        </p>
+        <div class="demo-buttons">
+            <button class="demo-btn demo-btn-primary" onclick="showBasicConfirm()">
+                <i class="fas fa-question"></i>
+                Basic Confirm
+            </button>
+            <button class="demo-btn demo-btn-danger" onclick="showDeleteConfirm()">
+                <i class="fas fa-trash-alt"></i>
+                Delete Confirm
+            </button>
+            <button class="demo-btn demo-btn-warning" onclick="showDeleteAllConfirm()">
+                <i class="fas fa-exclamation-triangle"></i>
+                Delete All Confirm
+            </button>
+            <button class="demo-btn demo-btn-success" onclick="showMarkAllReadConfirm()">
+                <i class="fas fa-check-double"></i>
+                Mark All Read
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Section -->
+    <div class="demo-section">
+        <h3>
+            <i class="fas fa-bell"></i>
+            Toast Notifications
+        </h3>
+        <p class="demo-description">
+            Non-intrusive toast notifications that appear in the corner for quick feedback.
+        </p>
+        <div class="demo-buttons">
+            <button class="demo-btn demo-btn-info" onclick="showInfoToast()">
+                <i class="fas fa-info-circle"></i>
+                Info Toast
+            </button>
+            <button class="demo-btn demo-btn-success" onclick="showSuccessToast()">
+                <i class="fas fa-check-circle"></i>
+                Success Toast
+            </button>
+            <button class="demo-btn demo-btn-warning" onclick="showWarningToast()">
+                <i class="fas fa-exclamation-triangle"></i>
+                Warning Toast
+            </button>
+            <button class="demo-btn demo-btn-danger" onclick="showErrorToast()">
+                <i class="fas fa-times-circle"></i>
+                Error Toast
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading Modal Section -->
+    <div class="demo-section">
+        <h3>
+            <i class="fas fa-spinner"></i>
+            Loading Modal
+        </h3>
+        <p class="demo-description">
+            Loading modals for operations that take time to complete.
+        </p>
+        <div class="demo-buttons">
+            <button class="demo-btn demo-btn-primary" onclick="showLoadingModal()">
+                <i class="fas fa-spinner"></i>
+                Show Loading
+            </button>
+        </div>
+    </div>
+
+    <!-- Usage Instructions -->
+    <div class="demo-section">
+        <h3>
+            <i class="fas fa-code"></i>
+            How to Use
+        </h3>
+        <p class="demo-description">
+            The themed popup system is automatically available on all pages. Here are some examples:
+        </p>
+        <div style="background: var(--bg-light); padding: 20px; border-radius: var(--border-radius-md); font-family: 'Courier New', monospace; font-size: 0.9rem; color: var(--text-color);">
+            <div style="margin-bottom: 15px;">
+                <strong>// Show an alert</strong><br>
+                themedPopup.showAlert('Your message here', 'Title', 'info');
+            </div>
+            <div style="margin-bottom: 15px;">
+                <strong>// Show a confirmation</strong><br>
+                const confirmed = await themedPopup.showConfirm('Are you sure?', 'Confirm Action');<br>
+                if (confirmed) { /* do something */ }
+            </div>
+            <div style="margin-bottom: 15px;">
+                <strong>// Show toast notifications</strong><br>
+                themedPopup.success('Operation completed successfully!');<br>
+                themedPopup.error('Something went wrong!');<br>
+                themedPopup.warning('Please check your input.');<br>
+                themedPopup.info('Here\'s some information.');
+            </div>
+            <div>
+                <strong>// Show loading modal</strong><br>
+                const loading = themedPopup.showLoading('Processing...');<br>
+                // Close it later: themedPopup.closeModal();
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Demo functions for modal popups
+function showInfoAlert() {
+    themedPopup.showAlert('This is an informational message to keep you updated.', 'Information', 'info');
+}
+
+function showSuccessAlert() {
+    themedPopup.showAlert('Your operation was completed successfully!', 'Success', 'success');
+}
+
+function showWarningAlert() {
+    themedPopup.showAlert('Please review your input before proceeding.', 'Warning', 'warning');
+}
+
+function showErrorAlert() {
+    themedPopup.showAlert('An error occurred while processing your request.', 'Error', 'error');
+}
+
+// Demo functions for confirmation dialogs
+async function showBasicConfirm() {
+    const result = await themedPopup.showConfirm('Do you want to proceed with this action?', 'Confirm Action');
+    themedPopup.info(`You clicked: ${result ? 'Confirm' : 'Cancel'}`);
+}
+
+async function showDeleteConfirm() {
+    const result = await themedPopup.confirmDelete('this item');
+    themedPopup.info(`You clicked: ${result ? 'Delete' : 'Cancel'}`);
+}
+
+async function showDeleteAllConfirm() {
+    const result = await themedPopup.confirmDeleteAll('items');
+    themedPopup.info(`You clicked: ${result ? 'Delete All' : 'Cancel'}`);
+}
+
+async function showMarkAllReadConfirm() {
+    const result = await themedPopup.confirmMarkAllRead();
+    themedPopup.info(`You clicked: ${result ? 'Mark All Read' : 'Cancel'}`);
+}
+
+// Demo functions for toast notifications
+function showInfoToast() {
+    themedPopup.info('This is an informational toast notification.', 'Info');
+}
+
+function showSuccessToast() {
+    themedPopup.success('Your action was completed successfully!', 'Success');
+}
+
+function showWarningToast() {
+    themedPopup.warning('Please be careful with this action.', 'Warning');
+}
+
+function showErrorToast() {
+    themedPopup.error('Something went wrong. Please try again.', 'Error');
+}
+
+// Demo function for loading modal
+function showLoadingModal() {
+    const loading = themedPopup.showLoading('Processing your request...');
+    
+    // Simulate some work and close after 3 seconds
+    setTimeout(() => {
+        themedPopup.closeModal();
+        themedPopup.success('Loading completed!', 'Done');
+    }, 3000);
+}
+</script>
+{% endblock %}

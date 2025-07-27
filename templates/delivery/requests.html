@@ -1,0 +1,499 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Delivery Requests - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .requests-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .page-header h1 {
+        color: #2c3e50;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .requests-grid {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    .request-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        border-left: 4px solid #667eea;
+        transition: all 0.3s ease;
+    }
+
+    .request-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+
+    .request-card.pending {
+        border-left-color: #f39c12;
+    }
+
+    .request-card.accepted {
+        border-left-color: #27ae60;
+    }
+
+    .request-card.rejected {
+        border-left-color: #e74c3c;
+    }
+
+    .request-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .request-info h3 {
+        color: #2c3e50;
+        font-size: 1.2rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .request-info .vendor-name {
+        color: #667eea;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .request-status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-accepted {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-rejected {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .request-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        background: #f8f9fa;
+        border-radius: 6px;
+    }
+
+    .detail-item i {
+        color: #667eea;
+        width: 20px;
+    }
+
+    .detail-item strong {
+        color: #2c3e50;
+        margin-right: 0.5rem;
+    }
+
+    .order-items {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .order-items h4 {
+        color: #2c3e50;
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+    }
+
+    .item-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .order-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+        background: white;
+        border-radius: 4px;
+        font-size: 0.9rem;
+    }
+
+    .item-name {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .item-details {
+        color: #666;
+        font-size: 0.8rem;
+    }
+
+    .item-price {
+        font-weight: 600;
+        color: #27ae60;
+    }
+
+    .request-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+    }
+
+    .action-btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .accept-btn {
+        background: #27ae60;
+        color: white;
+    }
+
+    .accept-btn:hover {
+        background: #219a52;
+        transform: translateY(-1px);
+    }
+
+    .reject-btn {
+        background: #e74c3c;
+        color: white;
+    }
+
+    .reject-btn:hover {
+        background: #c0392b;
+        transform: translateY(-1px);
+    }
+
+    .action-btn:disabled {
+        background: #bdc3c7;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #666;
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.3;
+    }
+
+    .empty-state h3 {
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+    }
+
+    .refresh-btn {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        margin: 1rem auto;
+        display: block;
+        transition: all 0.3s ease;
+    }
+
+    .refresh-btn:hover {
+        background: #5a67d8;
+        transform: translateY(-1px);
+    }
+
+    @media (max-width: 768px) {
+        .requests-container {
+            padding: 0 1rem;
+            margin: 1rem auto;
+        }
+
+        .request-header {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .request-details {
+            grid-template-columns: 1fr;
+        }
+
+        .request-actions {
+            flex-direction: column;
+        }
+
+        .action-btn {
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="requests-container">
+    <div class="page-header">
+        <h1>🚚 Delivery Requests</h1>
+        <p>Manage your incoming delivery requests</p>
+    </div>
+
+    <button class="refresh-btn" onclick="refreshRequests()">
+        <i class="fas fa-sync-alt"></i> Refresh Requests
+    </button>
+
+    <div class="requests-grid" id="requestsGrid">
+        {% for request in delivery_requests %}
+        <div class="request-card {{ request.status }}" data-request-id="{{ request.id }}">
+            <div class="request-header">
+                <div class="request-info">
+                    <h3>Order #{{ request.order.order_number }}</h3>
+                    <div class="vendor-name">From: {{ request.vendor.first_name }} {{ request.vendor.last_name|default:request.vendor.username }}</div>
+                </div>
+                <span class="request-status status-{{ request.status }}">{{ request.get_status_display }}</span>
+            </div>
+
+            <div class="request-details">
+                <div class="detail-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <strong>Pickup:</strong> {{ request.pickup_address }}
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-map-pin"></i>
+                    <div>
+                        <strong>Delivery:</strong> {{ request.delivery_address }}
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <div>
+                        <strong>Fee:</strong> ₹{{ request.delivery_fee }}
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <strong>Requested:</strong> {{ request.created_at|date:"M d, Y H:i" }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-items">
+                <h4>📦 Order Items</h4>
+                <div class="item-list">
+                    {% for item in request.order.items.all %}
+                    <div class="order-item">
+                        <div>
+                            <div class="item-name">{{ item.product.name }}</div>
+                            <div class="item-details">{{ item.quantity }} {{ item.product.unit }} from {{ item.supplier.name }}</div>
+                        </div>
+                        <div class="item-price">₹{{ item.total_price }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if request.notes %}
+            <div class="detail-item" style="margin-bottom: 1rem;">
+                <i class="fas fa-sticky-note"></i>
+                <div>
+                    <strong>Notes:</strong> {{ request.notes }}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if request.status == 'pending' %}
+            <div class="request-actions">
+                <button class="action-btn reject-btn" onclick="handleRequest({{ request.id }}, 'reject')">
+                    <i class="fas fa-times"></i> Reject
+                </button>
+                <button class="action-btn accept-btn" onclick="handleRequest({{ request.id }}, 'accept')">
+                    <i class="fas fa-check"></i> Accept
+                </button>
+            </div>
+            {% endif %}
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <div class="empty-icon">📋</div>
+            <h3>No delivery requests yet</h3>
+            <p>When vendors place orders and select you as their delivery partner, requests will appear here.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+function handleRequest(requestId, action) {
+    const card = document.querySelector(`[data-request-id="${requestId}"]`);
+    const buttons = card.querySelectorAll('.action-btn');
+    
+    // Disable buttons
+    buttons.forEach(btn => {
+        btn.disabled = true;
+        btn.textContent = action === 'accept' ? 'Accepting...' : 'Rejecting...';
+    });
+    
+    const url = action === 'accept' ? 
+        `{% url 'delivery:accept_request' 0 %}`.replace('0', requestId) :
+        `{% url 'delivery:reject_request' 0 %}`.replace('0', requestId);
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update the card status
+            card.className = `request-card ${action}ed`;
+            const statusSpan = card.querySelector('.request-status');
+            statusSpan.className = `request-status status-${action}ed`;
+            statusSpan.textContent = action === 'accept' ? 'ACCEPTED' : 'REJECTED';
+            
+            // Remove action buttons
+            const actionsDiv = card.querySelector('.request-actions');
+            if (actionsDiv) {
+                actionsDiv.remove();
+            }
+            
+            showNotification(data.message, 'success');
+        } else {
+            showNotification(data.message || `Error ${action}ing request`, 'error');
+            // Re-enable buttons
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.innerHTML = action === 'accept' ? 
+                    '<i class="fas fa-check"></i> Accept' : 
+                    '<i class="fas fa-times"></i> Reject';
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification(`Error ${action}ing request`, 'error');
+        // Re-enable buttons
+        buttons.forEach(btn => {
+            btn.disabled = false;
+            btn.innerHTML = action === 'accept' ? 
+                '<i class="fas fa-check"></i> Accept' : 
+                '<i class="fas fa-times"></i> Reject';
+        });
+    });
+}
+
+function refreshRequests() {
+    location.reload();
+}
+
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-${type === 'error' ? 'exclamation-circle' : type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: ${type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#3b82f6'};
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 1002;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        max-width: 400px;
+        animation: slideIn 0.3s ease;
+    `;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.remove();
+    }, 4000);
+}
+
+// Add CSRF token for AJAX requests
+document.addEventListener('DOMContentLoaded', function() {
+    if (!document.querySelector('[name=csrfmiddlewaretoken]')) {
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = '{{ csrf_token }}';
+        document.body.appendChild(csrfToken);
+    }
+});
+</script>
+{% endblock %}

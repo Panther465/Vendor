@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Setup Group Buying Profile - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<style>
+    .setup-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+
+    .setup-card {
+        background: white;
+        border-radius: var(--border-radius-lg);
+        padding: 2rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-color);
+    }
+
+    .card-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--primary-color);
+    }
+
+    .card-header h1 {
+        color: var(--secondary-color);
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-header p {
+        color: var(--text-light);
+        font-size: 1.1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        font-size: 1rem;
+        transition: var(--transition);
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(255, 122, 61, 0.2);
+    }
+
+    .form-check {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-check input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--primary-color);
+    }
+
+    .form-check label {
+        margin: 0;
+        font-weight: normal;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--border-radius-md);
+        text-decoration: none;
+        font-weight: 500;
+        text-align: center;
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .btn-primary {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-dark);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: var(--bg-dark);
+        color: var(--text-color);
+    }
+
+    .btn-secondary:hover {
+        background: #ddd;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .help-text {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-top: 0.25rem;
+    }
+
+    .location-btn {
+        background: var(--info-color);
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: var(--border-radius-md);
+        cursor: pointer;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+
+    .location-btn:hover {
+        background: #2980b9;
+    }
+
+    @media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="setup-container">
+    <div class="setup-card">
+        <div class="card-header">
+            <h1>🛠️ Setup Group Buying Profile</h1>
+            <p>Configure your business details and group buying preferences</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Enable Group Buying -->
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" id="is_enabled" name="is_enabled" {% if profile.is_enabled %}checked{% endif %}>
+                    <label for="is_enabled">Enable Group Buying for my business</label>
+                </div>
+                <div class="help-text">When enabled, other vendors can see your profile and send group buying requests</div>
+            </div>
+
+            <!-- Business Information -->
+            <div class="form-group">
+                <label for="business_name">Business Name *</label>
+                <input type="text" id="business_name" name="business_name" class="form-control" 
+                       value="{{ profile.business_name }}" required>
+                <div class="help-text">This name will be visible to other vendors</div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="business_phone">Business Phone *</label>
+                    <input type="tel" id="business_phone" name="business_phone" class="form-control" 
+                           value="{{ profile.business_phone }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="max_group_size">Max Group Size</label>
+                    <input type="number" id="max_group_size" name="max_group_size" class="form-control" 
+                           value="{{ profile.max_group_size }}" min="2" max="20">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="business_address">Business Address *</label>
+                <textarea id="business_address" name="business_address" class="form-control" 
+                          rows="3" required>{{ profile.business_address }}</textarea>
+                <button type="button" class="location-btn" onclick="getCurrentLocation()">
+                    📍 Use Current Location
+                </button>
+                <div class="help-text">Provide your complete business address for accurate location matching</div>
+            </div>
+
+            <!-- Group Buying Preferences -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="preferred_radius">Preferred Radius (km)</label>
+                    <input type="number" id="preferred_radius" name="preferred_radius" class="form-control" 
+                           value="{{ profile.preferred_radius }}" min="1" max="50">
+                    <div class="help-text">How far you're willing to collaborate with other vendors</div>
+                </div>
+                <div class="form-group">
+                    <div class="form-check" style="margin-top: 2rem;">
+                        <input type="checkbox" id="discrete_delivery_enabled" name="discrete_delivery_enabled" 
+                               {% if profile.discrete_delivery_enabled %}checked{% endif %}>
+                        <label for="discrete_delivery_enabled">Enable Discrete Delivery</label>
+                    </div>
+                    <div class="help-text">Allow separate delivery addresses for group orders (additional cost)</div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">💾 Save Profile</button>
+                <a href="{% url 'groupbuying:home' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function getCurrentLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            
+            // Use reverse geocoding to get address (you can implement this with Google Maps API)
+            alert(`Location detected: ${lat}, ${lng}\nPlease manually enter your complete address for now.`);
+        }, function(error) {
+            alert('Error getting location: ' + error.message);
+        });
+    } else {
+        alert('Geolocation is not supported by this browser.');
+    }
+}
+
+// Form validation
+document.querySelector('form').addEventListener('submit', function(e) {
+    const isEnabled = document.getElementById('is_enabled').checked;
+    const businessName = document.getElementById('business_name').value.trim();
+    const businessPhone = document.getElementById('business_phone').value.trim();
+    const businessAddress = document.getElementById('business_address').value.trim();
+    
+    if (isEnabled && (!businessName || !businessPhone || !businessAddress)) {
+        e.preventDefault();
+        alert('Please fill in all required fields when enabling group buying.');
+        return false;
+    }
+});
+</script>
+{% endblock %}

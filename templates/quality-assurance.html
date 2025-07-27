@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Quality Assurance & Traceability - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/quality-assurance.css' %}">
+{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="page-hero">
+        <div class="page-hero-container">
+            <div class="page-hero-content">
+                <h1>Quality Assurance & Traceability</h1>
+                <p>Our comprehensive system ensures you receive only the highest quality raw materials for your food business. Every product is verified, tracked, and guaranteed for freshness and safety.</p>
+                <div class="hero-badges">
+                    <div class="badge">
+                        <i class="fas fa-certificate"></i>
+                        <span>FSSAI Certified</span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Quality Guaranteed</span>
+                    </div>
+                </div>
+            </div>
+            <div class="page-hero-illustration">
+                <img src="{% static 'images/quality-assurance.svg' %}" alt="Quality assurance illustration">
+            </div>
+        </div>
+    </section>
+    <!-- Quality Overview Section -->
+    <section class="quality-overview">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Quality Control System</h2>
+                <p>A multi-layered approach to ensure quality at every step</p>
+            </div>
+            <div class="quality-content">
+                <div class="quality-image">
+                    <img src="images/quality-assurance.svg" alt="Quality Assurance Illustration">
+                </div>
+                <div class="quality-info">
+                    <p>At StreetEats Connect, we understand that the quality of raw materials directly impacts the taste, safety, and reputation of your food business. Our comprehensive quality assurance system combines technology, community oversight, and traditional verification methods to ensure you receive only the best ingredients.</p>
+                    <div class="quality-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label">Verified Suppliers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">95%</div>
+                            <div class="stat-label">Quality Satisfaction</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">24hr</div>
+                            <div class="stat-label">Issue Resolution</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Quality Features Section -->
+    <section class="quality-features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Quality Assurance Features</h2>
+                <p>Multiple layers of verification to ensure consistent quality</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3>Digital Quality Checks</h3>
+                    <p>Suppliers must upload photos and videos of products before shipping, allowing for visual verification of quality</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Vendor Feedback System</h3>
+                    <p>Real-time ratings and reviews from other vendors help maintain high standards across the platform</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-vial"></i>
+                    </div>
+                    <h3>Rapid Testing Kits</h3>
+                    <p>Simple testing tools available for vendors to quickly check for adulterants and quality issues</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Community Control</h3>
+                    <p>Collective oversight where vendors in the same area can verify supplier quality together</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3>Certification Verification</h3>
+                    <p>All suppliers must provide valid FSSAI certification and other relevant documents</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <h3>Blockchain Traceability</h3>
+                    <p>Future implementation of blockchain technology for complete end-to-end traceability</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Traceability Section -->
+    <section class="traceability">
+        <div class="container">
+            <div class="section-header">
+                <h2>Complete Traceability</h2>
+                <p>Know exactly where your ingredients come from</p>
+            </div>
+            <div class="traceability-content">
+                <div class="traceability-info">
+                    <h3>Why Traceability Matters</h3>
+                    <p>Traceability isn't just about quality—it's about trust, safety, and sustainability. Our system allows you to:</p>
+                    <ul class="benefits-list">
+                        <li><i class="fas fa-check"></i> Verify the source of all raw materials</li>
+                        <li><i class="fas fa-check"></i> Track handling and transportation conditions</li>
+                        <li><i class="fas fa-check"></i> Quickly identify and address quality issues</li>
+                        <li><i class="fas fa-check"></i> Build customer trust with transparent sourcing</li>
+                        <li><i class="fas fa-check"></i> Support sustainable and ethical supply chains</li>
+                    </ul>
+                </div>
+                <div class="traceability-steps">
+                    <div class="trace-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Source Verification</h4>
+                            <p>Suppliers document the origin of all products</p>
+                        </div>
+                    </div>
+                    <div class="trace-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Quality Documentation</h4>
+                            <p>Visual evidence and quality metrics recorded</p>
+                        </div>
+                    </div>
+                    <div class="trace-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Transport Tracking</h4>
+                            <p>Monitoring of conditions during delivery</p>
+                        </div>
+                    </div>
+                    <div class="trace-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Vendor Verification</h4>
+                            <p>Confirmation of quality upon receipt</p>
+                        </div>
+                    </div>
+                    <div class="trace-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Customer Transparency</h4>
+                            <p>Option to share sourcing info with your customers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Quality Assurance FAQ Section -->
+    <section class="quality-faq">
+        <div class="container">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+                <p>Common questions about our quality assurance system</p>
+            </div>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How do you verify supplier credentials?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We conduct a thorough verification process that includes checking FSSAI certification, business registration, physical location verification, and background checks. We also collect and verify references from existing customers.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What happens if I receive poor quality materials?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our platform has a robust issue resolution system. You can report quality issues immediately through the app with photos. We offer a 100% quality guarantee, meaning you'll receive a replacement or refund for any substandard products within 24 hours.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How does the rapid testing kit work?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our affordable testing kits are designed for easy use by vendors without technical training. They can detect common adulterants in milk, ghee, oils, and spices through simple color-change tests. Each kit comes with clear instructions and can perform multiple tests.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What is blockchain traceability and when will it be available?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Blockchain traceability creates an immutable record of each product's journey from source to vendor. This technology will be implemented in phases starting next quarter, beginning with high-value items like saffron and specialty ingredients before expanding to all products.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How can I participate in community quality control?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>After signing up, you can join or create a local vendor group in your area. These groups coordinate quality checks, share feedback, and can organize joint supplier visits. The app will notify you of community quality check events happening nearby.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-content">
+            <h2>Ready to Experience Premium Quality Ingredients?</h2>
+            <p>Join thousands of street food vendors already benefiting from our quality assurance system</p>
+            <div class="cta-buttons">
+                <a href="{% url 'accounts:signup' %}" class="btn btn-primary">Sign Up Now</a>
+                <a href="#contact" class="btn btn-outline">Contact Us</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/quality-assurance.js' %}"></script>
+{% endblock %}

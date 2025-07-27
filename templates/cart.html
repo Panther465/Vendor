@@ -1,0 +1,1174 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Shopping Cart - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            padding-top: 0px;
+            padding-bottom: 1.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .cart-section {
+            background: white;
+            border-radius: 16px;
+            padding: 1.8rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cart-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2f43a5, #4a5bb8, #2f43a5);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, #2f43a5, transparent);
+            margin-left: 1rem;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            padding: 1.4rem;
+            margin-bottom: 0.8rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cart-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(47,67,165,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .cart-item:hover {
+            background: white;
+            border-color: #2f43a5;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(47,67,165,0.15);
+        }
+
+        .cart-item:hover::before {
+            left: 100%;
+        }
+
+        .item-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #2f43a5, #4a5bb8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            box-shadow: 0 6px 15px rgba(47,67,165,0.3);
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .item-image::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-bottom: 0.4rem;
+            line-height: 1.2;
+        }
+
+        .item-description {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 0.6rem;
+            line-height: 1.4;
+        }
+
+        .item-supplier {
+            color: #2f43a5;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: rgba(47,67,165,0.1);
+            padding: 0.2rem 0.6rem;
+            border-radius: 16px;
+            display: inline-block;
+            margin-bottom: 0.6rem;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin: 0.8rem 0;
+            background: white;
+            padding: 0.4rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            width: fit-content;
+        }
+
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            border: 2px solid #2f43a5;
+            background: white;
+            color: #2f43a5;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qty-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(47,67,165,0.2), transparent);
+            transition: left 0.3s;
+        }
+
+        .qty-btn:hover {
+            background: #2f43a5;
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(47,67,165,0.3);
+        }
+
+        .qty-btn:hover::before {
+            left: 100%;
+        }
+
+        .qty-display {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 0.5rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            background: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        .item-price {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #2c3e50;
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+        }
+
+        .remove-btn {
+            color: #dc3545;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .remove-btn:hover {
+            background: #fee;
+            color: #c82333;
+        }
+
+        .delivery-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .delivery-partners {
+            background: white;
+            border-radius: 12px;
+            padding: 1.2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .delivery-partner {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.2rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .delivery-partner:hover {
+            border-color: #2f43a5;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(47,67,165,0.15);
+        }
+
+        .delivery-partner.selected {
+            border-color: #2f43a5;
+            background: linear-gradient(135deg, rgba(47,67,165,0.08), rgba(74,91,184,0.08));
+            box-shadow: 0 8px 30px rgba(47,67,165,0.2);
+        }
+
+        .delivery-partner.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #2f43a5;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .partner-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #2f43a5, #4a5bb8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 3px 10px rgba(47,67,165,0.3);
+            flex-shrink: 0;
+        }
+
+        .partner-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .partner-name {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.3rem;
+            font-size: 1rem;
+            line-height: 1.2;
+        }
+
+        .partner-details {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.4rem;
+            line-height: 1.3;
+        }
+
+        .partner-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.75rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .stars {
+            color: #ffc107;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .container-options {
+            margin-top: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 0.6rem;
+            background: rgba(248,249,250,0.8);
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+
+        .container-option {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            cursor: pointer;
+            padding: 0.5rem 0.6rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            background: white;
+            position: relative;
+            font-size: 0.75rem;
+        }
+
+        .container-option:not(:last-child) {
+            margin-bottom: 0.5rem;
+        }
+
+        .container-option:hover {
+            border-color: #2f43a5;
+            background: rgba(47,67,165,0.05);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(47,67,165,0.15);
+        }
+
+        .container-option input[type="radio"] {
+            margin: 0;
+            accent-color: #2f43a5;
+            width: 14px;
+            height: 14px;
+        }
+
+        .container-option input[type="radio"]:checked {
+            transform: scale(1.1);
+        }
+
+        .container-option:has(input[type="radio"]:checked) {
+            border-color: #2f43a5;
+            background: rgba(47,67,165,0.1);
+            box-shadow: 0 2px 12px rgba(47,67,165,0.2);
+        }
+
+        .container-option:has(input[type="radio"]:checked) .container-label {
+            color: #2f43a5;
+            font-weight: 600;
+        }
+
+        .container-label {
+            font-size: 0.7rem;
+            color: #555;
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .container-price {
+            font-size: 0.65rem;
+            color: #2f43a5;
+            font-weight: 700;
+            background: rgba(47,67,165,0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            margin-left: auto;
+        }
+
+        .delivery-fee {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .partner-price {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.2rem;
+            min-width: 70px;
+        }
+
+        .delivery-time {
+            font-size: 0.7rem;
+            color: #666;
+            background: rgba(47,67,165,0.1);
+            border-radius: 4px;
+            padding: 0.3rem 0.5rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .order-summary {
+            background: white;
+            border-radius: 12px;
+            padding: 1.2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.85rem;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #2c3e50;
+            margin-top: 0.4rem;
+            padding-top: 0.8rem;
+            border-top: 2px solid #eee;
+        }
+
+        .proceed-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #2f43a5, #4a5bb8);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.8rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .proceed-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .proceed-btn:hover::before {
+            left: 100%;
+        }
+
+        .proceed-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(47,67,165,0.3);
+        }
+
+        .proceed-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+            
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .cart-section, .delivery-partners, .order-summary {
+                padding: 0.8rem;
+            }
+
+            .delivery-partner {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.75rem;
+                padding: 0.75rem;
+            }
+
+            .partner-logo {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+                align-self: flex-start;
+            }
+
+            .partner-info {
+                flex: 1;
+            }
+
+            .partner-name {
+                font-size: 0.95rem;
+            }
+
+            .partner-details {
+                font-size: 0.8rem;
+            }
+
+            .partner-rating {
+                font-size: 0.75rem;
+            }
+
+            .container-options {
+                margin-top: 0.5rem;
+                gap: 0.4rem;
+                padding: 0.6rem;
+            }
+
+            .container-option {
+                padding: 0.5rem 0.6rem;
+                font-size: 0.8rem;
+            }
+
+            .container-label {
+                font-size: 0.7rem;
+            }
+
+            .container-price {
+                font-size: 0.65rem;
+            }
+
+            .partner-price {
+                text-align: left;
+                align-self: flex-start;
+            }
+
+            .delivery-fee {
+                font-size: 0.95rem;
+            }
+
+            .delivery-time {
+                font-size: 0.75rem;
+            }
+
+            .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+                padding: 1rem 0;
+            }
+
+            .item-image {
+                width: 50px;
+                height: 50px;
+                align-self: center;
+                font-size: 1.2rem;
+            }
+
+            .item-details {
+                width: 100%;
+                text-align: center;
+            }
+
+            .quantity-controls {
+                justify-content: center;
+                margin: 0.75rem 0;
+            }
+
+            .item-price {
+                text-align: center;
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+
+            .cart-section, .delivery-partners, .order-summary {
+                padding: 0.75rem;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .delivery-partner {
+                padding: 0.6rem;
+                gap: 0.6rem;
+            }
+
+            .partner-logo {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+
+            .partner-name {
+                font-size: 0.9rem;
+            }
+
+            .partner-details {
+                font-size: 0.75rem;
+            }
+
+            .container-option {
+                padding: 0.4rem 0.5rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #666;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    {% csrf_token %}
+    <div class="container">
+        <div class="cart-section">
+            <h2 class="section-title">
+                🛍️ Your Cart Items
+            </h2>
+            
+            <div id="cartItems">
+                {% if cart_items %}
+                    {% for item in cart_items %}
+                    <div class="cart-item" data-item-id="{{ item.id }}">
+                        <div class="item-image">
+                            {% if 'spinach' in item.product.name|lower or 'leafy' in item.product.name|lower %}🥬
+                            {% elif 'tomato' in item.product.name|lower %}🍅
+                            {% elif 'chili' in item.product.name|lower or 'chilli' in item.product.name|lower %}🌶️
+                            {% elif 'container' in item.product.name|lower or 'packaging' in item.product.name|lower %}📦
+                            {% elif 'onion' in item.product.name|lower %}🧅
+                            {% elif 'carrot' in item.product.name|lower %}🥕
+                            {% elif 'potato' in item.product.name|lower %}🥔
+                            {% elif 'apple' in item.product.name|lower %}🍎
+                            {% elif 'banana' in item.product.name|lower %}🍌
+                            {% elif 'orange' in item.product.name|lower %}🍊
+                            {% elif 'milk' in item.product.name|lower or 'dairy' in item.product.name|lower %}🥛
+                            {% elif 'rice' in item.product.name|lower or 'grain' in item.product.name|lower %}🌾
+                            {% elif 'oil' in item.product.name|lower %}🛢️
+                            {% elif 'spice' in item.product.name|lower or 'masala' in item.product.name|lower %}🌶️
+                            {% else %}🥘{% endif %}
+                        </div>
+                        <div class="item-details">
+                            <div class="item-name">{{ item.product.name }}</div>
+                            <div class="item-description">{{ item.product.description|default:"Premium quality product for your street food business" }}</div>
+                            <div class="item-supplier">From: {{ item.product.supplier.name }}</div>
+                            <div class="quantity-controls">
+                                <button class="qty-btn" onclick="updateQuantity({{ item.id }}, {{ item.quantity|add:'-1' }})">-</button>
+                                <span class="qty-display" id="qty-{{ item.id }}">{{ item.quantity }}</span>
+                                <button class="qty-btn" onclick="updateQuantity({{ item.id }}, {{ item.quantity|add:'1' }})">+</button>
+                                <span style="margin-left: 1rem; color: #666;">{{ item.product.unit }}</span>
+                            </div>
+                        </div>
+                        <div class="item-price">
+                            ₹<span id="price-{{ item.id }}">{{ item.total_price }}</span>
+                            <button class="remove-btn" onclick="removeItem({{ item.id }})">🗑️</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">🛒</div>
+                        <h3>Your cart is empty</h3>
+                        <p>Add some items from <a href="{% url 'suppliers:list' %}" style="color: #2f43a5;">suppliers page</a> to get started</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="delivery-section">
+            <div class="delivery-partners">
+                <h3 class="section-title">
+                    🚚 Choose Delivery Partner
+                </h3>
+                
+                {% for partner in available_partners %}
+                <div class="delivery-partner" onclick="selectPartner({{ partner.id }})">
+                    <div class="partner-logo">
+                        {{ partner.delivery_partner.first_name.0|default:partner.delivery_partner.username.0|upper }}{{ partner.delivery_partner.last_name.0|default:partner.delivery_partner.username.1|upper }}
+                    </div>
+                    <div class="partner-info">
+                        <div class="partner-name">{{ partner.delivery_partner.first_name }} {{ partner.delivery_partner.last_name|default:partner.delivery_partner.username }}</div>
+                        <div class="partner-details">{{ partner.description|default:"Professional delivery service" }}</div>
+                        <div class="partner-rating">
+                            <span class="stars">
+                                {% with rating=partner.delivery_partner.delivery_profile.rating|floatformat:0|default:5 %}
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= rating|add:0 %}★{% else %}☆{% endif %}
+                                    {% endfor %}
+                                {% endwith %}
+                            </span>
+                            <span>{{ partner.delivery_partner.delivery_profile.rating|floatformat:1|default:"5.0" }} ({{ partner.delivery_partner.delivery_profile.total_deliveries|default:0 }} deliveries)</span>
+                        </div>
+                        <div class="container-options">
+                            {% if partner.normal_container_available %}
+                            <label class="container-option">
+                                <input type="radio" name="container-{{ partner.id }}" value="normal" checked onchange="updateContainerPrice({{ partner.id }}, 'normal', 0)">
+                                <span class="container-label">📦 Normal Container</span>
+                                <span class="container-price">Free</span>
+                            </label>
+                            {% endif %}
+                            {% if partner.cold_container_available %}
+                            <label class="container-option">
+                                <input type="radio" name="container-{{ partner.id }}" value="cold" onchange="updateContainerPrice({{ partner.id }}, 'cold', {{ partner.cold_container_extra_charge }})">
+                                <span class="container-label">❄️ Cold Container</span>
+                                <span class="container-price">+₹{{ partner.cold_container_extra_charge }}</span>
+                            </label>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="partner-price">
+                        <div class="delivery-fee">₹<span id="partner-{{ partner.id }}-price">{{ partner.price_per_kg }}</span>/kg</div>
+                        <div class="delivery-time">{{ partner.estimated_delivery_time }}</div>
+                    </div>
+                </div>
+                {% empty %}
+                <div style="text-align: center; padding: 2rem; color: #666;">
+                    <i class="fas fa-truck" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                    <h3>No delivery partners available</h3>
+                    <p>Please check back later or contact support for assistance.</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="order-summary">
+                <h3 class="section-title">📋 Order Summary</h3>
+                
+                <div class="summary-row">
+                    <span>Subtotal ({{ cart_items|length }} items)</span>
+                    <span>₹<span id="subtotal">{% for item in cart_items %}{{ item.total_price }}{% if not forloop.last %}+{% endif %}{% endfor %}</span></span>
+                </div>
+                
+                <div class="summary-row">
+                    <span>Delivery Fee</span>
+                    <span>₹<span id="deliveryFee">0</span></span>
+                </div>
+                
+                <div class="summary-row">
+                    <span>GST (5%)</span>
+                    <span>₹<span id="gst">0</span></span>
+                </div>
+                
+                <div class="summary-row">
+                    <span><strong>Total Amount</strong></span>
+                    <span><strong>₹<span id="total">0</span></strong></span>
+                </div>
+                
+                <button class="proceed-btn" id="proceedBtn" onclick="proceedToBuy()" disabled>
+                    Select Delivery Partner to Continue
+                </button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        let selectedPartner = null;
+        // Cart data is now loaded from Django template
+        let cartItems = {};
+        
+        // Initialize cart items from Django template data
+        function initializeCartItems() {
+            {% for item in cart_items %}
+            cartItems[{{ item.id }}] = {
+                name: '{{ item.product.name|escapejs }}',
+                price: {{ item.product.price }},
+                qty: {{ item.quantity }},
+                unit: '{{ item.product.unit|escapejs }}',
+                supplier: '{{ item.product.supplier.name|escapejs }}',
+                total_price: {{ item.total_price }}
+            };
+            {% endfor %}
+        }
+        
+        function renderCartItems() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            
+            if (Object.keys(cartItems).length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🛒</div>
+                        <h3>Your cart is empty</h3>
+                        <p>Add some items from <a href="/suppliers/" style="color: #2f43a5;">suppliers page</a> to get started</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            cartItemsContainer.innerHTML = Object.entries(cartItems).map(([itemId, item]) => {
+                const itemEmoji = getItemEmoji(item.name);
+                return `
+                    <div class="cart-item">
+                        <div class="item-image">${itemEmoji}</div>
+                        <div class="item-details">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-description">Premium quality ${item.name.toLowerCase()}, perfect for your street food business</div>
+                            <div class="item-supplier">From: ${item.supplier || 'Local Supplier'}</div>
+                            <div class="quantity-controls">
+                                <button class="qty-btn" onclick="updateQuantity(${itemId}, -1)">-</button>
+                                <span class="qty-display" id="qty-${itemId}">${item.qty}</span>
+                                <button class="qty-btn" onclick="updateQuantity(${itemId}, 1)">+</button>
+                                <span style="margin-left: 1rem; color: #666;">${item.unit || 'kg'}</span>
+                            </div>
+                        </div>
+                        <div class="item-price">
+                            ₹<span id="price-${itemId}">${item.price * item.qty}</span>
+                            <button class="remove-btn" onclick="removeItem(${itemId})">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function getItemEmoji(itemName) {
+            const name = itemName.toLowerCase();
+            if (name.includes('spinach') || name.includes('leafy')) return '🥬';
+            if (name.includes('tomato')) return '🍅';
+            if (name.includes('chili') || name.includes('chilli') || name.includes('pepper')) return '🌶️';
+            if (name.includes('container') || name.includes('packaging') || name.includes('box')) return '📦';
+            if (name.includes('onion')) return '🧅';
+            if (name.includes('carrot')) return '🥕';
+            if (name.includes('potato')) return '🥔';
+            if (name.includes('apple')) return '🍎';
+            if (name.includes('banana')) return '🍌';
+            if (name.includes('orange')) return '🍊';
+            if (name.includes('milk') || name.includes('dairy')) return '🥛';
+            if (name.includes('rice') || name.includes('grain')) return '🌾';
+            if (name.includes('oil')) return '🛢️';
+            if (name.includes('spice') || name.includes('masala')) return '🌶️';
+            return '🥘'; // Default food emoji
+        }
+
+        let deliveryPrices = {
+            {% for partner in available_partners %}
+            {{ partner.id }}: { 
+                base: {{ partner.price_per_kg }}, 
+                cold: {{ partner.cold_container_extra_charge|default:0 }} 
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        };
+
+        let containerChoices = {
+            {% for partner in available_partners %}
+            {{ partner.id }}: 'normal'{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        };
+
+        function updateContainerPrice(partnerId, containerType, extraCharge) {
+            // Prevent event bubbling to parent
+            event.stopPropagation();
+            
+            containerChoices[partnerId] = containerType;
+            const totalPrice = deliveryPrices[partnerId].base + (containerType === 'cold' ? extraCharge : 0);
+            document.getElementById(`partner-${partnerId}-price`).textContent = totalPrice;
+            
+            // Update delivery fee in summary if this partner is selected
+            if (selectedPartner === partnerId) {
+                document.getElementById('deliveryFee').textContent = totalPrice;
+                updateOrderSummary();
+            }
+        }
+
+        function selectPartner(partnerId) {
+            // Remove previous selection
+            document.querySelectorAll('.delivery-partner').forEach(partner => {
+                partner.classList.remove('selected');
+            });
+            
+            // Add selection to clicked partner
+            event.currentTarget.classList.add('selected');
+            selectedPartner = partnerId;
+            
+            // Update delivery fee
+            const containerExtra = containerChoices[partnerId] === 'cold' ? 
+                deliveryPrices[partnerId].cold : 0;
+            const totalDeliveryFee = deliveryPrices[partnerId].base + containerExtra;
+            document.getElementById('deliveryFee').textContent = totalDeliveryFee;
+            
+            // Update total
+            updateOrderSummary();
+            
+            // Enable proceed button
+            const proceedBtn = document.getElementById('proceedBtn');
+            proceedBtn.disabled = false;
+            proceedBtn.textContent = 'Proceed to Buy';
+        }
+
+        function updateQuantity(itemId, newQty) {
+            if (newQty < 1) {
+                removeItem(itemId);
+                return;
+            }
+            
+            // Show loading state
+            const qtyElement = document.getElementById(`qty-${itemId}`);
+            if (qtyElement) qtyElement.textContent = '...';
+            
+            // Send AJAX request to update quantity
+            fetch('{% url "orders:update_cart" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    item_id: itemId,
+                    quantity: newQty
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update local data
+                    if (cartItems[itemId]) {
+                        cartItems[itemId].qty = newQty;
+                        cartItems[itemId].total_price = cartItems[itemId].price * newQty;
+                    }
+                    
+                    // Update display
+                    if (qtyElement) qtyElement.textContent = newQty;
+                    const priceElement = document.getElementById(`price-${itemId}`);
+                    if (priceElement && cartItems[itemId]) {
+                        priceElement.textContent = cartItems[itemId].total_price.toFixed(2);
+                    }
+                    
+                    // Update navbar cart count
+                    updateNavbarCartCount(data.cart_count);
+                    updateOrderSummary();
+                    
+                    showNotification(data.message, 'success');
+                } else {
+                    // Restore original quantity on error
+                    if (qtyElement && cartItems[itemId]) {
+                        qtyElement.textContent = cartItems[itemId].qty;
+                    }
+                    showNotification(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating cart:', error);
+                // Restore original quantity on error
+                if (qtyElement && cartItems[itemId]) {
+                    qtyElement.textContent = cartItems[itemId].qty;
+                }
+                showNotification('Error updating cart', 'error');
+            });
+        }
+
+        function removeItem(itemId) {
+            if (confirm('Are you sure you want to remove this item from cart?')) {
+                // Send AJAX request to remove item
+                fetch('{% url "orders:remove_from_cart" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        item_id: itemId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove item from local data
+                        delete cartItems[itemId];
+                        
+                        // Remove item from DOM
+                        const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
+                        if (itemElement) {
+                            itemElement.remove();
+                        }
+                        
+                        // Update navbar cart count
+                        updateNavbarCartCount(data.cart_count);
+                        updateOrderSummary();
+                        
+                        // Check if cart is empty
+                        if (Object.keys(cartItems).length === 0) {
+                            document.getElementById('cartItems').innerHTML = `
+                                <div class="empty-state">
+                                    <div class="empty-icon">🛒</div>
+                                    <h3>Your cart is empty</h3>
+                                    <p>Add some items from <a href="{% url 'suppliers:list' %}" style="color: #2f43a5;">suppliers page</a> to get started</p>
+                                </div>
+                            `;
+                        }
+                        
+                        showNotification(data.message, 'success');
+                    } else {
+                        showNotification(data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error removing item:', error);
+                    showNotification('Error removing item from cart', 'error');
+                });
+            }
+        }
+        
+        function updateNavbarCartCount(count = null) {
+            const totalItems = count !== null ? count : Object.values(cartItems).reduce((sum, item) => sum + item.qty, 0);
+            const navbarCartCount = document.querySelector('.cart-count');
+            if (navbarCartCount) {
+                navbarCartCount.textContent = totalItems;
+                navbarCartCount.style.display = totalItems > 0 ? 'inline' : 'none';
+            }
+        }
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas fa-${type === 'error' ? 'exclamation-circle' : type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#3b82f6'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 1002;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                max-width: 400px;
+                animation: slideIn 0.3s ease;
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 4000);
+        }
+
+        function updateOrderSummary() {
+            const subtotal = Object.values(cartItems).reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const deliveryFee = selectedPartner ? 
+                (deliveryPrices[selectedPartner].base + 
+                 (containerChoices[selectedPartner] === 'cold' ? deliveryPrices[selectedPartner].cold : 0)) : 0;
+            const gst = Math.round((subtotal + deliveryFee) * 0.05);
+            const total = subtotal + deliveryFee + gst;
+            
+            document.getElementById('subtotal').textContent = subtotal;
+            document.getElementById('gst').textContent = gst;
+            document.getElementById('total').textContent = total;
+            
+            // Update item count
+            const itemCount = Object.values(cartItems).reduce((sum, item) => sum + item.qty, 0);
+            document.querySelector('.summary-row span').textContent = `Subtotal (${itemCount} items)`;
+        }
+
+        function proceedToBuy() {
+            // Redirect to delivery address page
+            window.location.href = '{% url "orders:delivery_address" %}';
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCartItems();
+            updateOrderSummary();
+            updateNavbarCartCount();
+        });
+    </script>
+{% endblock %}

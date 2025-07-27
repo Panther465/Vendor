@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="40" viewBox="0 0 120 40">
+  <!-- Background -->
+  <rect width="120" height="40" rx="5" fill="#2C3E50"/>
+  
+  <!-- Apple Icon -->
+  <g transform="translate(25, 20)">
+    <!-- Apple Shape -->
+    <path d="M0,-10 C-2,-10 -5,-8 -5,-5 C-5,-2 -3,0 0,0 C3,0 5,-2 5,-5 C5,-8 2,-10 0,-10 Z" fill="white"/>
+    <path d="M-5,-2 C-5,5 -2,10 0,10 C2,10 5,5 5,-2 L-5,-2 Z" fill="white"/>
+    <path d="M-3,-7 C-4,-8 -5,-7 -5,-6 C-5,-5 -4,-5 -3,-6 C-2,-7 -2,-6 -3,-7 Z" fill="#2C3E50"/>
+  </g>
+  
+  <!-- Text -->
+  <g transform="translate(75, 20)">
+    <text x="0" y="-8" font-family="Arial, sans-serif" font-size="8" fill="white" text-anchor="middle">Download on the</text>
+    <text x="0" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">App Store</text>
+  </g>
+</svg>

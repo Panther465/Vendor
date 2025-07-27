@@ -1,0 +1,404 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Vendor Dashboard - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<style>
+.dashboard-container {
+    max-width: 1200px;
+    margin: 100px auto 50px;
+    padding: 0 20px;
+}
+
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.dashboard-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.dashboard-subtitle {
+    color: #666;
+    font-size: 16px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 24px;
+    color: white;
+}
+
+.stat-icon.orders { background: linear-gradient(135deg, #2f43a5, #1e2d6b); }
+.stat-icon.pending { background: linear-gradient(135deg, #ffc107, #e0a800); }
+.stat-icon.notifications { background: linear-gradient(135deg, #17a2b8, #138496); }
+.stat-icon.revenue { background: linear-gradient(135deg, #28a745, #1e7e34); }
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    color: #666;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.dashboard-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.content-section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.section-header {
+    padding: 20px 30px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.view-all-link {
+    color: #2f43a5;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.view-all-link:hover {
+    color: #1e2d6b;
+}
+
+.order-item, .notification-item {
+    padding: 20px 30px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.order-item:last-child, .notification-item:last-child {
+    border-bottom: none;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.item-meta {
+    font-size: 14px;
+    color: #666;
+}
+
+.item-status {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.status-pending { background: #fff3cd; color: #856404; }
+.status-confirmed { background: #d4edda; color: #155724; }
+.status-shipped { background: #cce5ff; color: #004085; }
+.status-delivered { background: #d1ecf1; color: #0c5460; }
+.status-cancelled { background: #f8d7da; color: #721c24; }
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.action-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    color: inherit;
+}
+
+.action-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 20px;
+    color: white;
+    background: linear-gradient(135deg, #2f43a5, #1e2d6b);
+}
+
+.action-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.action-desc {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: #ddd;
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        margin-top: 80px;
+        padding: 0 15px;
+    }
+    
+    .dashboard-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .stats-grid,
+    .quick-actions {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .order-item,
+    .notification-item {
+        padding: 15px 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">
+            <i class="fas fa-tachometer-alt"></i>
+            Vendor Dashboard
+        </h1>
+        <p class="dashboard-subtitle">Welcome back, {{ user.first_name|default:user.username }}! Here's your business overview.</p>
+    </div>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon orders">
+                <i class="fas fa-shopping-bag"></i>
+            </div>
+            <div class="stat-number">{{ total_orders }}</div>
+            <div class="stat-label">Total Orders</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon pending">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-number">{{ pending_orders }}</div>
+            <div class="stat-label">Pending Orders</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon notifications">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="stat-number">{{ unread_notifications_count|default:0 }}</div>
+            <div class="stat-label">New Notifications</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon revenue">
+                <i class="fas fa-rupee-sign"></i>
+            </div>
+            <div class="stat-number">₹0</div>
+            <div class="stat-label">This Month</div>
+        </div>
+    </div>
+    
+    <div class="dashboard-content">
+        <div class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-shopping-bag"></i>
+                    Recent Orders
+                </h2>
+                <a href="{% url 'orders:list' %}" class="view-all-link">View All</a>
+            </div>
+            
+            {% if recent_orders %}
+                {% for order in recent_orders %}
+                <div class="order-item">
+                    <div class="item-info">
+                        <div class="item-title">Order #{{ order.order_number }}</div>
+                        <div class="item-meta">
+                            {{ order.created_at|date:"M d, Y" }} • ₹{{ order.total_amount }}
+                        </div>
+                    </div>
+                    <span class="item-status status-{{ order.status }}">{{ order.get_status_display }}</span>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-shopping-bag"></i>
+                    <p>No orders yet. Start by browsing suppliers!</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-bell"></i>
+                    Recent Notifications
+                </h2>
+                <a href="{% url 'notifications:list' %}" class="view-all-link">View All</a>
+            </div>
+            
+            {% if recent_notifications %}
+                {% for notification in recent_notifications %}
+                <div class="notification-item">
+                    <div class="item-info">
+                        <div class="item-title">{{ notification.title|truncatechars:30 }}</div>
+                        <div class="item-meta">{{ notification.created_at|timesince }} ago</div>
+                    </div>
+                    {% if not notification.is_read %}
+                        <span style="width: 8px; height: 8px; background: #2f43a5; border-radius: 50%;"></span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-bell"></i>
+                    <p>No notifications yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="content-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fas fa-rocket"></i>
+                Quick Actions
+            </h2>
+        </div>
+        
+        <div style="padding: 30px;">
+            <div class="quick-actions">
+                <a href="{% url 'suppliers:list' %}" class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div class="action-title">Browse Suppliers</div>
+                    <div class="action-desc">Find quality suppliers for your business needs</div>
+                </a>
+                
+                <a href="{% url 'orders:cart' %}" class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="action-title">View Cart</div>
+                    <div class="action-desc">Check your cart and place orders</div>
+                </a>
+                
+                <a href="{% url 'groupbuying:home' %}" class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="action-title">Group Buying</div>
+                    <div class="action-desc">Join group purchases for better prices</div>
+                </a>
+                
+                <a href="{% url 'delivery:requests' %}" class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="action-title">Delivery Partners</div>
+                    <div class="action-desc">Find available delivery partners</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

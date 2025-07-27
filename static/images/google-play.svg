@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="40" viewBox="0 0 120 40">
+  <!-- Background -->
+  <rect width="120" height="40" rx="5" fill="#2C3E50"/>
+  
+  <!-- Google Play Icon -->
+  <g transform="translate(25, 20)">
+    <!-- Triangle -->
+    <path d="M-10,-10 L10,0 L-10,10 Z" fill="white"/>
+    
+    <!-- Curved Shapes -->
+    <path d="M-10,-10 C0,-5 0,5 -10,10 L-8,8 C-2,4 -2,-4 -8,-8 Z" fill="#FF7A3D"/>
+    <path d="M10,0 L-8,8 C-2,4 -2,-4 -8,-8 L10,0 Z" fill="#27AE60"/>
+    <path d="M-8,-8 L-8,8 L-10,10 L-10,-10 Z" fill="#3498DB"/>
+  </g>
+  
+  <!-- Text -->
+  <g transform="translate(75, 20)">
+    <text x="0" y="-8" font-family="Arial, sans-serif" font-size="8" fill="white" text-anchor="middle">GET IT ON</text>
+    <text x="0" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Google Play</text>
+  </g>
+</svg>

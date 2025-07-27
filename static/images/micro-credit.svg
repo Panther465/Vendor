@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#F8FAFC"/>
+  
+  <!-- Abstract background -->
+  <circle cx="70" cy="70" r="25" fill="#E0E7FF" opacity="0.6"/>
+  <circle cx="330" cy="230" r="30" fill="#FEF3C7" opacity="0.7"/>
+  <circle cx="350" cy="90" r="20" fill="#DCFCE7" opacity="0.8"/>
+  
+  <!-- Main credit/loan concept -->
+  <g transform="translate(200, 150)">
+    <!-- Central bank/institution -->
+    <rect x="-40" y="-30" width="80" height="60" rx="10" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="2"/>
+    <rect x="-30" y="-20" width="60" height="8" rx="4" fill="#3B82F6"/>
+    
+    <!-- Bank columns -->
+    <rect x="-25" y="-10" width="8" height="30" rx="2" fill="#F3F4F6"/>
+    <rect x="-10" y="-10" width="8" height="30" rx="2" fill="#F3F4F6"/>
+    <rect x="5" y="-10" width="8" height="30" rx="2" fill="#F3F4F6"/>
+    <rect x="20" y="-10" width="8" height="30" rx="2" fill="#F3F4F6"/>
+    
+    <!-- Money flow -->
+    <g transform="translate(-80, 0)">
+      <!-- Person requesting loan -->
+      <circle cx="0" cy="-10" r="12" fill="#F59E0B"/>
+      <circle cx="0" cy="-15" r="8" fill="#FEF3C7"/>
+      <rect x="-6" y="0" width="12" height="20" rx="6" fill="#3B82F6"/>
+      
+      <!-- Money flow arrow -->
+      <path d="M15 0 Q30 -10 45 0" stroke="#22C55E" stroke-width="3" fill="none"/>
+      <path d="M40 -3 L45 0 L40 3" stroke="#22C55E" stroke-width="3" fill="none"/>
+      
+      <!-- Money symbols -->
+      <circle cx="25" cy="-8" r="4" fill="#22C55E" opacity="0.8"/>
+      <rect x="23" y="-10" width="4" height="2" rx="1" fill="#FFFFFF"/>
+      <rect x="23" y="-6" width="4" height="2" rx="1" fill="#FFFFFF"/>
+    </g>
+    
+    <!-- Loan approval process -->
+    <g transform="translate(80, 0)">
+      <!-- Approved stamp -->
+      <circle cx="0" cy="0" r="20" fill="#22C55E" opacity="0.2"/>
+      <circle cx="0" cy="0" r="15" fill="#22C55E"/>
+      <path d="M-6 0 L-2 4 L6 -4" stroke="#FFFFFF" stroke-width="3" fill="none"/>
+    </g>
+  </g>
+  
+  <!-- PM SVANidhi scheme representation -->
+  <g transform="translate(80, 80)">
+    <rect x="0" y="0" width="120" height="40" rx="8" fill="#FFFFFF" stroke="#F97316" stroke-width="2"/>
+    <rect x="10" y="8" width="100" height="6" rx="3" fill="#F97316"/>
+    <rect x="10" y="18" width="60" height="4" rx="2" fill="#374151"/>
+    <rect x="10" y="26" width="80" height="4" rx="2" fill="#9CA3AF"/>
+  </g>
+  
+  <!-- Digital payment concept -->
+  <g transform="translate(250, 200)">
+    <!-- Mobile phone -->
+    <rect x="0" y="0" width="40" height="70" rx="8" fill="#374151"/>
+    <rect x="5" y="10" width="30" height="45" rx="3" fill="#60A5FA"/>
+    
+    <!-- Payment interface -->
+    <rect x="10" y="15" width="20" height="4" rx="2" fill="#FFFFFF"/>
+    <rect x="10" y="22" width="15" height="3" rx="1" fill="#FFFFFF"/>
+    <rect x="10" y="28" width="18" height="3" rx="1" fill="#FFFFFF"/>
+    
+    <!-- Payment button -->
+    <rect x="10" y="40" width="20" height="8" rx="4" fill="#22C55E"/>
+    <rect x="15" y="42" width="10" height="2" rx="1" fill="#FFFFFF"/>
+    
+    <!-- Home button -->
+    <circle cx="20" cy="62" r="3" fill="#9CA3AF"/>
+  </g>
+  
+  <!-- Interest rate indicator -->
+  <g transform="translate(50, 200)">
+    <rect x="0" y="0" width="60" height="30" rx="15" fill="#EF4444" opacity="0.2"/>
+    <rect x="10" y="8" width="40" height="4" rx="2" fill="#EF4444"/>
+    <rect x="15" y="15" width="15" height="3" rx="1" fill="#FFFFFF"/>
+    <rect x="35" y="15" width="10" height="3" rx="1" fill="#FFFFFF"/>
+  </g>
+  
+  <!-- Floating currency symbols -->
+  <g transform="translate(120, 40)">
+    <circle cx="0" cy="0" r="8" fill="#F59E0B"/>
+    <path d="M-3 -3 L3 3 M3 -3 L-3 3" stroke="#FFFFFF" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="3" fill="none" stroke="#FFFFFF" stroke-width="1"/>
+  </g>
+  
+  <g transform="translate(300, 120)">
+    <circle cx="0" cy="0" r="6" fill="#22C55E"/>
+    <rect x="-2" y="-4" width="4" height="8" rx="1" fill="#FFFFFF"/>
+    <rect x="-3" y="-1" width="6" height="2" rx="1" fill="#FFFFFF"/>
+  </g>
+  
+  <!-- Abstract decorative elements -->
+  <circle cx="40" cy="120" r="4" fill="#8B5CF6" opacity="0.7"/>
+  <circle cx="360" cy="160" r="5" fill="#EF4444" opacity="0.6"/>
+  <rect x="30" y="250" width="8" height="8" rx="2" fill="#F59E0B" opacity="0.8" transform="rotate(45 34 254)"/>
+</svg>

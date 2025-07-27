@@ -1,0 +1,465 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order Successful - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<style>
+.success-container {
+    max-width: 800px;
+    margin: 100px auto 50px;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.success-icon {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px;
+    font-size: 3rem;
+    color: white;
+    animation: successPulse 2s ease-in-out;
+}
+
+@keyframes successPulse {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.success-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #28a745;
+    margin-bottom: 15px;
+}
+
+.success-subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+.order-details-card {
+    background: white;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.order-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.order-status {
+    background: #ffc107;
+    color: #856404;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.order-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.info-item {
+    text-align: center;
+}
+
+.info-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 107, 53, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    color: #ff6b35;
+    font-size: 1.2rem;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.info-value {
+    color: #666;
+    font-size: 14px;
+}
+
+.delivery-info {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.delivery-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.delivery-address {
+    color: #666;
+    line-height: 1.6;
+}
+
+.order-items {
+    margin-bottom: 30px;
+}
+
+.items-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.item-details {
+    flex: 1;
+}
+
+.item-name {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.item-meta {
+    color: #666;
+    font-size: 14px;
+}
+
+.item-price {
+    font-weight: 600;
+    color: #333;
+}
+
+.order-total {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.total-row.final {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #333;
+    border-top: 1px solid #e9ecef;
+    padding-top: 15px;
+    margin-top: 15px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+.btn {
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: #2f43a5;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1e2d6b;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.btn-outline {
+    background: transparent;
+    color: #2f43a5;
+    border: 2px solid #2f43a5;
+}
+
+.btn-outline:hover {
+    background: #2f43a5;
+    color: white;
+}
+
+.next-steps {
+    background: #e8f5e8;
+    border: 1px solid #c3e6cb;
+    border-radius: 10px;
+    padding: 25px;
+    margin-top: 30px;
+    text-align: left;
+}
+
+.next-steps-title {
+    font-weight: 600;
+    color: #155724;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.next-steps-list {
+    list-style: none;
+    padding: 0;
+}
+
+.next-steps-list li {
+    color: #155724;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.next-steps-list li i {
+    color: #28a745;
+}
+
+@media (max-width: 768px) {
+    .success-container {
+        margin-top: 80px;
+        padding: 0 15px;
+    }
+    
+    .order-details-card {
+        padding: 20px;
+    }
+    
+    .order-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .order-info-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="success-container">
+    <div class="success-icon">
+        <i class="fas fa-check"></i>
+    </div>
+    
+    <h1 class="success-title">Order Placed Successfully!</h1>
+    <p class="success-subtitle">Thank you for your order. We'll start processing it right away.</p>
+    
+    <div class="order-details-card">
+        <div class="order-header">
+            <div class="order-number">Order #{{ order.order_number }}</div>
+            <div class="order-status">{{ order.status|title }}</div>
+        </div>
+        
+        <div class="order-info-grid">
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="info-label">Order Date</div>
+                <div class="info-value">{{ order.created_at|date:"M d, Y" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="info-label">Payment Method</div>
+                <div class="info-value">
+                    {% if order.payment_method == 'razorpay' %}
+                        Online Payment
+                    {% elif order.payment_method == 'cod' %}
+                        Cash on Delivery
+                    {% else %}
+                        {{ order.payment_method|title }}
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
+                <div class="info-label">Total Amount</div>
+                <div class="info-value">₹{{ order.total_amount }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="info-label">Delivery Status</div>
+                <div class="info-value">Processing</div>
+            </div>
+        </div>
+        
+        <div class="delivery-info">
+            <div class="delivery-title">
+                <i class="fas fa-map-marker-alt"></i>
+                Delivery Address
+            </div>
+            <div class="delivery-address">
+                <strong>{{ order.customer_name }}</strong><br>
+                {{ order.delivery_address }}<br>
+                <i class="fas fa-phone"></i> {{ order.customer_phone }}
+            </div>
+        </div>
+        
+        <div class="order-items">
+            <div class="items-title">
+                <i class="fas fa-shopping-bag"></i>
+                Order Items
+            </div>
+            
+            {% for item in order.items.all %}
+            <div class="order-item">
+                <div class="item-details">
+                    <div class="item-name">{{ item.product.name }}</div>
+                    <div class="item-meta">{{ item.quantity }} {{ item.product.unit }} × ₹{{ item.price }}</div>
+                </div>
+                <div class="item-price">₹{{ item.total_price }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="order-total">
+            <div class="total-row">
+                <span>Subtotal</span>
+                <span>₹{{ order.subtotal }}</span>
+            </div>
+            <div class="total-row">
+                <span>Delivery Fee</span>
+                <span>₹{{ order.delivery_fee }}</span>
+            </div>
+            <div class="total-row">
+                <span>GST (18%)</span>
+                <span>₹{{ order.gst }}</span>
+            </div>
+            <div class="total-row final">
+                <span>Total Amount</span>
+                <span>₹{{ order.total_amount }}</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="next-steps">
+        <div class="next-steps-title">
+            <i class="fas fa-info-circle"></i>
+            What happens next?
+        </div>
+        <ul class="next-steps-list">
+            <li>
+                <i class="fas fa-check-circle"></i>
+                We'll assign a delivery partner to your order
+            </li>
+            <li>
+                <i class="fas fa-check-circle"></i>
+                You'll receive notifications about order status updates
+            </li>
+            <li>
+                <i class="fas fa-check-circle"></i>
+                Your order will be delivered within 2-4 hours
+            </li>
+            <li>
+                <i class="fas fa-check-circle"></i>
+                You can track your order in real-time
+            </li>
+        </ul>
+    </div>
+    
+    <div class="action-buttons">
+        <a href="{% url 'orders:detail' order.id %}" class="btn btn-primary">
+            <i class="fas fa-eye"></i>
+            Track Order
+        </a>
+        <a href="{% url 'suppliers:list' %}" class="btn btn-outline">
+            <i class="fas fa-shopping-cart"></i>
+            Continue Shopping
+        </a>
+        <a href="{% url 'core:vendor_home' %}" class="btn btn-secondary">
+            <i class="fas fa-home"></i>
+            Go to Home
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,966 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Group Buying - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .group-buying-hero {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 80px 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .group-buying-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+        z-index: 1;
+    }
+
+    .hero-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-content h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-content p {
+        font-size: 1.2rem;
+        opacity: 0.95;
+        line-height: 1.6;
+        margin-bottom: 30px;
+    }
+
+    .hero-stats {
+        display: flex;
+        gap: 40px;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        display: block;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: white;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+    .hero-illustration {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .hero-illustration img {
+        max-width: 100%;
+        height: auto;
+        filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2));
+        animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+
+    @media (max-width: 768px) {
+        .hero-container {
+            grid-template-columns: 1fr;
+            gap: 40px;
+            text-align: center;
+        }
+        
+        .hero-content h1 {
+            font-size: 2.5rem;
+        }
+        
+        .hero-stats {
+            justify-content: center;
+        }
+        
+        .hero-illustration {
+            order: -1;
+        }
+    }
+
+    .group-buying-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--primary-color);
+    }
+
+    .page-header h1 {
+        color: var(--secondary-color);
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+        color: var(--text-light);
+        font-size: 1.1rem;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .profile-card, .vendors-card {
+        background: white;
+        border-radius: var(--border-radius-lg);
+        padding: 2rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-color);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-header h2 {
+        color: var(--secondary-color);
+        font-size: 1.5rem;
+        margin: 0;
+    }
+
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .status-enabled {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-disabled {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .profile-info {
+        margin-bottom: 1rem;
+    }
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: var(--text-color);
+    }
+
+    .info-value {
+        color: var(--text-light);
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--border-radius-md);
+        text-decoration: none;
+        font-weight: 500;
+        text-align: center;
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-dark);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: var(--bg-dark);
+        color: var(--text-color);
+    }
+
+    .btn-secondary:hover {
+        background: #ddd;
+    }
+
+    .vendor-list {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .vendor-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        margin-bottom: 1rem;
+        background: #f9f9f9;
+    }
+
+    .vendor-info h4 {
+        color: var(--secondary-color);
+        margin-bottom: 0.25rem;
+    }
+
+    .vendor-info p {
+        color: var(--text-light);
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .vendor-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .requests-section {
+        margin-top: 2rem;
+    }
+
+    .requests-tabs {
+        display: flex;
+        border-bottom: 2px solid var(--border-color);
+        margin-bottom: 1.5rem;
+    }
+
+    .tab-btn {
+        padding: 1rem 2rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        color: var(--text-light);
+        border-bottom: 2px solid transparent;
+        transition: var(--transition);
+    }
+
+    .tab-btn.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .request-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        margin-bottom: 1rem;
+        background: white;
+    }
+
+    .request-info h4 {
+        color: var(--secondary-color);
+        margin-bottom: 0.25rem;
+    }
+
+    .request-info p {
+        color: var(--text-light);
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .request-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-success {
+        background: var(--success-color);
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #219a52;
+        color: white;
+    }
+
+    .btn-danger {
+        background: var(--danger-color);
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #c82333;
+        color: white;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-light);
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--text-lighter);
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal-overlay.show {
+        display: flex;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: var(--border-radius-lg);
+        padding: 2rem;
+        max-width: 600px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        position: relative;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--primary-color);
+    }
+
+    .modal-header h2 {
+        color: var(--secondary-color);
+        margin: 0;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--text-light);
+        padding: 0.5rem;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-close:hover {
+        background: #f0f0f0;
+        color: var(--text-color);
+    }
+
+    .vendor-details {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .detail-section {
+        background: #f9f9f9;
+        padding: 1rem;
+        border-radius: var(--border-radius-md);
+        border: 1px solid var(--border-color);
+    }
+
+    .detail-section h4 {
+        color: var(--secondary-color);
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 0.5rem;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.25rem 0;
+    }
+
+    .detail-row strong {
+        color: var(--text-color);
+    }
+
+    .items-list {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .item-tag {
+        display: inline-block;
+        background: var(--primary-color);
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        margin: 0.25rem;
+    }
+
+    .call-btn {
+        background: var(--success-color);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: var(--border-radius-md);
+        cursor: pointer;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: var(--transition);
+    }
+
+    .call-btn:hover {
+        background: #219a52;
+        color: white;
+    }
+
+    .request-message-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1001;
+    }
+
+    .request-message-modal.show {
+        display: flex;
+    }
+
+    .message-form {
+        background: white;
+        border-radius: var(--border-radius-lg);
+        padding: 2rem;
+        max-width: 500px;
+        width: 90%;
+    }
+
+    .message-form h3 {
+        color: var(--secondary-color);
+        margin-bottom: 1rem;
+    }
+
+    .message-form textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        resize: vertical;
+        min-height: 100px;
+        font-family: inherit;
+    }
+
+    .message-form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .requests-tabs {
+            flex-direction: column;
+        }
+        
+        .vendor-item, .request-item {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .modal-content {
+            width: 95%;
+            padding: 1rem;
+        }
+
+        .detail-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="group-buying-hero">
+    <div class="hero-container">
+        <div class="hero-content">
+            <h1 style="color: white;">🤝 Group Buying</h1>
+            <p style="color: white;">Connect with nearby vendors to buy in bulk and save money together. Join forces with other street food vendors to get better prices and build community connections.</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">{{ nearby_vendors.count }}+</span>
+                    <span class="stat-label">Active Vendors</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">30%</span>
+                    <span class="stat-label">Average Savings</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-illustration">
+            <img src="{% static 'images/group-buying.svg' %}" alt="Group buying illustration">
+        </div>
+    </div>
+</section>
+
+<div class="group-buying-container">
+
+    <div class="dashboard-grid">
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <div class="card-header">
+                <h2>My Profile</h2>
+                <span class="status-badge {% if profile.is_enabled %}status-enabled{% else %}status-disabled{% endif %}">
+                    {% if profile.is_enabled %}Enabled{% else %}Disabled{% endif %}
+                </span>
+            </div>
+
+            <div class="profile-info">
+                <div class="info-item">
+                    <span class="info-label">Business Name:</span>
+                    <span class="info-value">{{ profile.business_name|default:"Not set" }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Phone:</span>
+                    <span class="info-value">{{ profile.business_phone|default:"Not set" }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Max Group Size:</span>
+                    <span class="info-value">{{ profile.max_group_size }} vendors</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Preferred Radius:</span>
+                    <span class="info-value">{{ profile.preferred_radius }} km</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <a href="{% url 'groupbuying:setup_profile' %}" class="btn btn-primary">Setup Profile</a>
+                <a href="{% url 'groupbuying:manage_items' %}" class="btn btn-secondary">Manage Items</a>
+            </div>
+        </div>
+
+        <!-- Available Vendors -->
+        <div class="vendors-card">
+            <div class="card-header">
+                <h2>Available Vendors</h2>
+                <span style="font-size: 0.9rem; color: var(--text-light);">{{ nearby_vendors.count }} vendors</span>
+            </div>
+
+            <div class="vendor-list">
+                {% for vendor_profile in nearby_vendors %}
+                <div class="vendor-item">
+                    <div class="vendor-info">
+                        <h4>{{ vendor_profile.business_name }}</h4>
+                        <p>📞 {{ vendor_profile.business_phone }}</p>
+                        <p>📍 {{ vendor_profile.business_address|truncatechars:50 }}</p>
+                        <p><strong>Items:</strong> {{ vendor_profile.buying_items.count }} items</p>
+                    </div>
+                    <div class="vendor-actions">
+                        <button class="btn btn-primary btn-sm" onclick="viewVendorDetails({{ vendor_profile.vendor.id }})">
+                            View Details
+                        </button>
+                        <button class="btn btn-success btn-sm" onclick="sendRequest({{ vendor_profile.vendor.id }})">
+                            Request
+                        </button>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-users"></i>
+                    <h3>No vendors available</h3>
+                    <p>No vendors with group buying enabled in your area yet.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Requests Section -->
+    <div class="requests-section">
+        <div class="requests-tabs">
+            <button class="tab-btn active" onclick="switchTab('received')">
+                Received ({{ received_requests.count }})
+            </button>
+            <button class="tab-btn" onclick="switchTab('sent')">
+                Sent ({{ sent_requests.count }})
+            </button>
+        </div>
+
+        <!-- Received Requests -->
+        <div id="received-tab" class="tab-content active">
+            {% for request in received_requests %}
+            <div class="request-item" data-request-id="{{ request.id }}">
+                <div class="request-info">
+                    <h4>{{ request.sender.first_name }} {{ request.sender.last_name }}</h4>
+                    <p>{{ request.message|default:"No message" }}</p>
+                    <p><small>{{ request.created_at|date:"M d, Y H:i" }}</small></p>
+                </div>
+                {% if request.status == 'pending' %}
+                <div class="request-actions">
+                    <button class="btn btn-success btn-sm" onclick="handleRequest({{ request.id }}, 'accept')">
+                        Accept
+                    </button>
+                    <button class="btn btn-danger btn-sm" onclick="handleRequest({{ request.id }}, 'decline')">
+                        Decline
+                    </button>
+                </div>
+                {% else %}
+                <span class="status-badge status-{{ request.status }}">{{ request.get_status_display }}</span>
+                {% endif %}
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <h3>No requests received</h3>
+                <p>When other vendors send you group buying requests, they'll appear here.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Sent Requests -->
+        <div id="sent-tab" class="tab-content">
+            {% for request in sent_requests %}
+            <div class="request-item">
+                <div class="request-info">
+                    <h4>To: {{ request.receiver.first_name }} {{ request.receiver.last_name }}</h4>
+                    <p>{{ request.message|default:"No message" }}</p>
+                    <p><small>{{ request.created_at|date:"M d, Y H:i" }}</small></p>
+                </div>
+                <span class="status-badge status-{{ request.status }}">{{ request.get_status_display }}</span>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-paper-plane"></i>
+                <h3>No requests sent</h3>
+                <p>Start by sending group buying requests to other vendors.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Start Group Session Button -->
+    {% if received_requests|length > 0 or sent_requests|length > 0 %}
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="{% url 'groupbuying:start_session' %}" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">
+            🚀 Start Group Buying Session
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Vendor Details Modal -->
+<div class="modal-overlay" id="vendorModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="vendorModalTitle">Vendor Details</h2>
+            <button class="modal-close" onclick="closeVendorModal()">×</button>
+        </div>
+        <div id="vendorModalBody">
+            <!-- Content will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<!-- Request Message Modal -->
+<div class="request-message-modal" id="requestMessageModal">
+    <div class="message-form">
+        <h3>Send Group Buying Request</h3>
+        <p>Send a message to <span id="requestRecipientName"></span>:</p>
+        <textarea id="requestMessage" placeholder="Enter your message (optional)..."></textarea>
+        <div class="message-form-actions">
+            <button class="btn btn-secondary" onclick="closeRequestModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="confirmSendRequest()">Send Request</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function switchTab(tabName) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Show selected tab
+    document.getElementById(tabName + '-tab').classList.add('active');
+    event.target.classList.add('active');
+}
+
+let currentVendorId = null;
+
+function sendRequest(vendorId) {
+    currentVendorId = vendorId;
+    
+    // Get vendor name for the modal
+    const vendorCard = document.querySelector(`[onclick*="${vendorId}"]`);
+    const vendorName = vendorCard.querySelector('h4').textContent;
+    
+    document.getElementById('requestRecipientName').textContent = vendorName;
+    document.getElementById('requestMessage').value = '';
+    document.getElementById('requestMessageModal').classList.add('show');
+}
+
+function closeRequestModal() {
+    document.getElementById('requestMessageModal').classList.remove('show');
+    currentVendorId = null;
+}
+
+function confirmSendRequest() {
+    if (!currentVendorId) return;
+    
+    const message = document.getElementById('requestMessage').value;
+    
+    fetch(`{% url 'groupbuying:send_request' 0 %}`.replace('0', currentVendorId), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: `message=${encodeURIComponent(message)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            closeRequestModal();
+            location.reload();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error sending request');
+    });
+}
+
+function handleRequest(requestId, action) {
+    fetch(`{% url 'groupbuying:handle_request' 0 'accept' %}`.replace('0', requestId).replace('accept', action), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            location.reload();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert(`Error ${action}ing request`);
+    });
+}
+
+function viewVendorDetails(vendorId) {
+    // Fetch vendor details and show modal
+    fetch(`/group-buying/vendor-details/${vendorId}/`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showVendorModal(data.vendor);
+        } else {
+            alert('Error loading vendor details');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error loading vendor details');
+    });
+}
+
+function showVendorModal(vendor) {
+    document.getElementById('vendorModalTitle').textContent = vendor.business_name;
+    
+    const modalBody = document.getElementById('vendorModalBody');
+    modalBody.innerHTML = `
+        <div class="vendor-details">
+            <div class="detail-section">
+                <h4>📋 Business Information</h4>
+                <div class="detail-grid">
+                    <div class="detail-row">
+                        <strong>Business Name:</strong>
+                        <span>${vendor.business_name}</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Owner:</strong>
+                        <span>${vendor.owner_name}</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Phone:</strong>
+                        <span>${vendor.business_phone}</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Email:</strong>
+                        <span>${vendor.email}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <h4>📍 Location & Preferences</h4>
+                <div class="detail-grid">
+                    <div class="detail-row">
+                        <strong>Address:</strong>
+                        <span>${vendor.business_address}</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Max Group Size:</strong>
+                        <span>${vendor.max_group_size} vendors</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Preferred Radius:</strong>
+                        <span>${vendor.preferred_radius} km</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Discrete Delivery:</strong>
+                        <span>${vendor.discrete_delivery_enabled ? 'Yes' : 'No'}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <h4>📦 Items Needed (${vendor.items.length})</h4>
+                <div class="items-list">
+                    ${vendor.items.map(item => `
+                        <div class="item-tag">${item.name} - ${item.quantity}</div>
+                    `).join('')}
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <a href="tel:${vendor.business_phone}" class="call-btn">
+                    📞 Call Now
+                </a>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('vendorModal').classList.add('show');
+}
+
+function closeVendorModal() {
+    document.getElementById('vendorModal').classList.remove('show');
+}
+
+// Close modals when clicking outside
+document.addEventListener('click', function(event) {
+    const vendorModal = document.getElementById('vendorModal');
+    const requestModal = document.getElementById('requestMessageModal');
+    
+    if (event.target === vendorModal) {
+        closeVendorModal();
+    }
+    
+    if (event.target === requestModal) {
+        closeRequestModal();
+    }
+});
+</script>
+
+{% csrf_token %}
+{% endblock %}

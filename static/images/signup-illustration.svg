@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="200" viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Transparent background -->
+  <rect width="300" height="200" fill="transparent"/>
+  
+  <!-- Glowing background shapes -->
+  <circle cx="250" cy="50" r="30" fill="#60A5FA" opacity="0.4"/>
+  <circle cx="50" cy="150" r="25" fill="#FBBF24" opacity="0.4"/>
+  
+  <!-- Main signup form illustration -->
+  <g transform="translate(75, 40)">
+    <!-- Form container with dark theme -->
+    <rect x="0" y="0" width="150" height="120" rx="15" fill="#1F2937" stroke="#60A5FA" stroke-width="2"/>
+    <rect x="10" y="10" width="130" height="100" rx="8" fill="#374151"/>
+    
+    <!-- Form header -->
+    <rect x="20" y="20" width="110" height="8" rx="4" fill="#60A5FA"/>
+    
+    <!-- Form fields -->
+    <rect x="20" y="35" width="110" height="12" rx="6" fill="#4B5563" stroke="#60A5FA" stroke-width="1"/>
+    <rect x="25" y="38" width="40" height="3" rx="1" fill="#9CA3AF"/>
+    
+    <rect x="20" y="52" width="110" height="12" rx="6" fill="#4B5563" stroke="#60A5FA" stroke-width="1"/>
+    <rect x="25" y="55" width="50" height="3" rx="1" fill="#9CA3AF"/>
+    
+    <rect x="20" y="69" width="110" height="12" rx="6" fill="#4B5563" stroke="#60A5FA" stroke-width="1"/>
+    <circle cx="30" cy="75" r="1" fill="#9CA3AF"/>
+    <circle cx="35" cy="75" r="1" fill="#9CA3AF"/>
+    <circle cx="40" cy="75" r="1" fill="#9CA3AF"/>
+    <circle cx="45" cy="75" r="1" fill="#9CA3AF"/>
+    
+    <!-- Submit button -->
+    <rect x="20" y="86" width="110" height="15" rx="7" fill="#34D399"/>
+    <rect x="50" y="90" width="30" height="3" rx="1" fill="#FFFFFF"/>
+    <rect x="85" y="90" width="20" height="3" rx="1" fill="#FFFFFF"/>
+    
+    <!-- Person icon with glow -->
+    <circle cx="130" cy="30" r="10" fill="#F59E0B"/>
+    <circle cx="130" cy="27" r="6" fill="#FEF3C7"/>
+    <rect x="125" y="35" width="10" height="15" rx="5" fill="#60A5FA"/>
+  </g>
+  
+  <!-- Bright floating elements -->
+  <circle cx="40" cy="60" r="5" fill="#FB7185"/>
+  <circle cx="260" cy="120" r="7" fill="#34D399"/>
+  <rect x="30" y="30" width="10" height="10" rx="2" fill="#A78BFA" transform="rotate(45 35 35)"/>
+  
+  <!-- Success checkmarks with glow -->
+  <g transform="translate(200, 80)">
+    <circle cx="0" cy="0" r="12" fill="#34D399" opacity="0.4"/>
+    <path d="M-4 0 L-1 3 L4 -3" stroke="#34D399" stroke-width="3" fill="none"/>
+  </g>
+  
+  <g transform="translate(220, 140)">
+    <circle cx="0" cy="0" r="8" fill="#60A5FA" opacity="0.4"/>
+    <path d="M-3 0 L0 2 L3 -2" stroke="#60A5FA" stroke-width="2" fill="none"/>
+  </g>
+  
+  <!-- Additional bright elements -->
+  <circle cx="30" cy="30" r="3" fill="#FBBF24"/>
+  <circle cx="270" cy="170" r="4" fill="#FB7185"/>
+  <rect x="250" y="30" width="6" height="6" rx="1" fill="#34D399" transform="rotate(30 253 33)"/>
+  
+  <!-- Glow effects -->
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Apply glow to key elements -->
+  <circle cx="150" cy="50" r="8" fill="#60A5FA" opacity="0.6" filter="url(#glow)"/>
+  <circle cx="150" cy="150" r="6" fill="#34D399" opacity="0.6" filter="url(#glow)"/>
+</svg>

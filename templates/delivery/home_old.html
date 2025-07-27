@@ -1,0 +1,617 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Delivery Dashboard - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .delivery-badge {
+        background: #17a2b8;
+        color: white;
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        border-radius: 10px;
+        position: absolute;
+        top: -5px;
+        right: -5px;
+    }
+
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .welcome-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        text-align: center;
+    }
+
+    .welcome-section h1 {
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-size: 2rem;
+    }
+
+    .welcome-section p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .status-toggle {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .status-toggle h2 {
+        color: #2c3e50;
+        margin-bottom: 1rem;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 80px;
+        height: 40px;
+        margin: 0 1rem;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 40px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 32px;
+        width: 32px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #28a745;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(40px);
+    }
+
+    .status-text {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-top: 1rem;
+    }
+
+    .status-text.available {
+        color: #28a745;
+    }
+
+    .status-text.unavailable {
+        color: #dc3545;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .stat-icon.deliveries {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+
+    .stat-icon.earnings {
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+    }
+
+    .stat-icon.rating {
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+    }
+
+    .stat-icon.distance {
+        background: linear-gradient(135deg, #43e97b, #38f9d7);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .quick-actions {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        margin-bottom: 2rem;
+    }
+
+    .quick-actions h2 {
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+    }
+
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .action-card {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .action-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(102,126,234,0.3);
+        color: white;
+        text-decoration: none;
+    }
+
+    .action-card i {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .action-card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .action-card p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .recent-requests {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .recent-requests h2 {
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+    }
+
+    .request-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .request-item:hover {
+        border-color: #667eea;
+        box-shadow: 0 2px 10px rgba(102,126,234,0.1);
+    }
+
+    .request-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        color: #667eea;
+        font-size: 1.2rem;
+    }
+
+    .request-content {
+        flex: 1;
+    }
+
+    .request-title {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+    }
+
+    .request-details {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 0.25rem;
+    }
+
+    .request-time {
+        font-size: 0.8rem;
+        color: #999;
+    }
+
+    .request-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-accept {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-accept:hover {
+        background: #218838;
+    }
+
+    .btn-reject {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-reject:hover {
+        background: #c82333;
+    }
+
+    .no-requests {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+        padding: 2rem;
+    }
+
+    @media (max-width: 768px) {
+        .nav-container {
+            padding: 0 1rem;
+        }
+
+        .nav-menu {
+            gap: 1rem;
+        }
+
+        .dashboard-container {
+            padding: 0 1rem;
+            margin: 1rem auto;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .actions-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .welcome-section h1 {
+            font-size: 1.5rem;
+        }
+
+        .request-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .request-actions {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-container">
+    <div class="welcome-section">
+        <h1>Welcome back, {{ user.first_name|default:user.username }}!</h1>
+        <p>Ready to deliver? Check your requests and manage your availability</p>
+    </div>
+
+    <div class="status-toggle">
+        <h2>Availability Status</h2>
+        <label class="toggle-switch">
+            <input type="checkbox" id="availabilityToggle" {% if user.delivery_profile.is_available %}checked{% endif %}>
+            <span class="slider"></span>
+        </label>
+        <div class="status-text {% if user.delivery_profile.is_available %}available{% else %}unavailable{% endif %}" id="statusText">
+            {% if user.delivery_profile.is_available %}Available for Deliveries{% else %}Currently Unavailable{% endif %}
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon deliveries">
+                <i class="fas fa-truck"></i>
+            </div>
+            <div class="stat-number">{{ user.delivery_profile.total_deliveries|default:0 }}</div>
+            <div class="stat-label">Total Deliveries</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon earnings">
+                <i class="fas fa-rupee-sign"></i>
+            </div>
+            <div class="stat-number">₹0</div>
+            <div class="stat-label">Monthly Earnings</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon rating">
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-number">{{ user.delivery_profile.rating|floatformat:1|default:"0.0" }}</div>
+            <div class="stat-label">Rating</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon distance">
+                <i class="fas fa-route"></i>
+            </div>
+            <div class="stat-number">{{ user.delivery_profile.delivery_radius }}</div>
+            <div class="stat-label">Delivery Radius (km)</div>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="actions-grid">
+            <a href="{% url 'delivery:requests' %}" class="action-card">
+                <i class="fas fa-list-alt"></i>
+                <h3>View Requests</h3>
+                <p>Check pending delivery requests</p>
+            </a>
+            
+            <a href="{% url 'delivery:add_availability' %}" class="action-card">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3>Update Location</h3>
+                <p>Set your current delivery location</p>
+            </a>
+            
+            <a href="#" class="action-card">
+                <i class="fas fa-history"></i>
+                <h3>Delivery History</h3>
+                <p>View your completed deliveries</p>
+            </a>
+            
+            <a href="{% url 'accounts:profile' %}" class="action-card">
+                <i class="fas fa-user-edit"></i>
+                <h3>Update Profile</h3>
+                <p>Manage your delivery information</p>
+            </a>
+        </div>
+    </div>
+
+    <div class="recent-requests">
+        <h2>Recent Delivery Requests</h2>
+        <div id="requestsList">
+            <div class="no-requests">
+                <i class="fas fa-inbox" style="font-size: 3rem; color: #ddd; margin-bottom: 1rem;"></i>
+                <p>No delivery requests at the moment. Check back later!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Availability toggle
+document.getElementById('availabilityToggle').addEventListener('change', function() {
+    const isAvailable = this.checked;
+    const statusText = document.getElementById('statusText');
+    
+    // Update UI immediately
+    if (isAvailable) {
+        statusText.textContent = 'Available for Deliveries';
+        statusText.className = 'status-text available';
+    } else {
+        statusText.textContent = 'Currently Unavailable';
+        statusText.className = 'status-text unavailable';
+    }
+    
+    // Send AJAX request to update availability
+    fetch('{% url "delivery:toggle_availability" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            'is_available': isAvailable
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Availability updated successfully');
+        } else {
+            console.error('Failed to update availability');
+            // Revert the toggle if the request failed
+            this.checked = !isAvailable;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Revert the toggle if there was an error
+        this.checked = !isAvailable;
+    });
+});
+
+// Load delivery requests
+function loadDeliveryRequests() {
+    fetch('{% url "delivery:get_requests" %}')
+    .then(response => response.json())
+    .then(data => {
+        const requestsList = document.getElementById('requestsList');
+        
+        if (data.requests && data.requests.length > 0) {
+            requestsList.innerHTML = '';
+            data.requests.forEach(request => {
+                const requestItem = document.createElement('div');
+                requestItem.className = 'request-item';
+                requestItem.innerHTML = `
+                    <div class="request-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="request-content">
+                        <div class="request-title">${request.vendor_name}</div>
+                        <div class="request-details">Items: ${request.items_count} | Distance: ${request.distance}km</div>
+                        <div class="request-time">${request.created_at}</div>
+                    </div>
+                    <div class="request-actions">
+                        <button class="btn-accept" onclick="acceptRequest(${request.id})">Accept</button>
+                        <button class="btn-reject" onclick="rejectRequest(${request.id})">Reject</button>
+                    </div>
+                `;
+                requestsList.appendChild(requestItem);
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error loading requests:', error);
+    });
+}
+
+function acceptRequest(requestId) {
+    fetch(`{% url "delivery:accept_request" 0 %}`.replace('0', requestId), {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Request accepted successfully!');
+            loadDeliveryRequests();
+        } else {
+            alert('Failed to accept request: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while accepting the request.');
+    });
+}
+
+function rejectRequest(requestId) {
+    fetch(`{% url "delivery:reject_request" 0 %}`.replace('0', requestId), {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Request rejected.');
+            loadDeliveryRequests();
+        } else {
+            alert('Failed to reject request: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while rejecting the request.');
+    });
+}
+
+// Load requests on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadDeliveryRequests();
+    
+    // Refresh requests every 30 seconds
+    setInterval(loadDeliveryRequests, 30000);
+});
+</script>
+{% endblock %}

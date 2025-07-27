@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Manage Group Buying Items - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<style>
+    .items-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--primary-color);
+    }
+
+    .page-header h1 {
+        color: var(--secondary-color);
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .add-item-card {
+        background: white;
+        border-radius: var(--border-radius-lg);
+        padding: 2rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-color);
+        margin-bottom: 2rem;
+    }
+
+    .items-list {
+        background: white;
+        border-radius: var(--border-radius-lg);
+        padding: 2rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-color);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        font-size: 1rem;
+        transition: var(--transition);
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(255, 122, 61, 0.2);
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--border-radius-md);
+        text-decoration: none;
+        font-weight: 500;
+        text-align: center;
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .btn-primary {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-dark);
+        color: white;
+    }
+
+    .btn-danger {
+        background: var(--danger-color);
+        color: white;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-danger:hover {
+        background: #c82333;
+        color: white;
+    }
+
+    .item-card {
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        background: #f9f9f9;
+        position: relative;
+    }
+
+    .item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .item-title {
+        color: var(--secondary-color);
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .priority-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .priority-high {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .priority-medium {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .priority-low {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .item-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: var(--text-color);
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .detail-value {
+        color: var(--text-light);
+        font-size: 0.95rem;
+    }
+
+    .item-description {
+        background: white;
+        padding: 1rem;
+        border-radius: var(--border-radius-md);
+        border: 1px solid #e0e0e0;
+        margin-bottom: 1rem;
+    }
+
+    .item-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-light);
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        color: var(--text-lighter);
+    }
+
+    @media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+        
+        .item-header {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .item-details {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="items-container">
+    <div class="page-header">
+        <h1>📦 Manage Group Buying Items</h1>
+        <p>Add items you want to buy in bulk with other vendors</p>
+    </div>
+
+    <!-- Add New Item Form -->
+    <div class="add-item-card">
+        <h2 style="color: var(--secondary-color); margin-bottom: 1.5rem;">➕ Add New Item</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="item_name">Item Name *</label>
+                    <input type="text" id="item_name" name="item_name" class="form-control" 
+                           placeholder="e.g., Basmati Rice, Cooking Oil" required>
+                </div>
+                <div class="form-group">
+                    <label for="category">Category *</label>
+                    <select id="category" name="category" class="form-control" required>
+                        <option value="">Select Category</option>
+                        <option value="Grains & Cereals">Grains & Cereals</option>
+                        <option value="Oils & Fats">Oils & Fats</option>
+                        <option value="Spices & Seasonings">Spices & Seasonings</option>
+                        <option value="Vegetables">Vegetables</option>
+                        <option value="Dairy Products">Dairy Products</option>
+                        <option value="Meat & Poultry">Meat & Poultry</option>
+                        <option value="Packaging Materials">Packaging Materials</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="estimated_quantity">Estimated Quantity *</label>
+                    <input type="text" id="estimated_quantity" name="estimated_quantity" class="form-control" 
+                           placeholder="e.g., 50kg, 100 pieces, 20 liters" required>
+                </div>
+                <div class="form-group">
+                    <label for="priority">Priority</label>
+                    <select id="priority" name="priority" class="form-control">
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description (Optional)</label>
+                <textarea id="description" name="description" class="form-control" rows="3" 
+                          placeholder="Any specific requirements, quality preferences, etc."></textarea>
+            </div>
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary">➕ Add Item</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Items List -->
+    <div class="items-list">
+        <h2 style="color: var(--secondary-color); margin-bottom: 1.5rem;">
+            📋 My Items ({{ items.count }})
+        </h2>
+
+        {% for item in items %}
+        <div class="item-card">
+            <div class="item-header">
+                <h3 class="item-title">{{ item.item_name }}</h3>
+                <span class="priority-badge priority-{{ item.priority }}">{{ item.get_priority_display }}</span>
+            </div>
+
+            <div class="item-details">
+                <div class="detail-item">
+                    <span class="detail-label">Category</span>
+                    <span class="detail-value">{{ item.category }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Estimated Quantity</span>
+                    <span class="detail-value">{{ item.estimated_quantity }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Added On</span>
+                    <span class="detail-value">{{ item.created_at|date:"M d, Y" }}</span>
+                </div>
+            </div>
+
+            {% if item.description %}
+            <div class="item-description">
+                <strong>Description:</strong> {{ item.description }}
+            </div>
+            {% endif %}
+
+            <div class="item-actions">
+                <button class="btn btn-danger" onclick="deleteItem({{ item.id }})">
+                    🗑️ Delete
+                </button>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <i class="fas fa-box-open"></i>
+            <h3>No items added yet</h3>
+            <p>Add items you want to buy in bulk to attract other vendors for group buying.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="{% url 'groupbuying:home' %}" class="btn btn-primary">← Back to Group Buying</a>
+    </div>
+</div>
+
+<script>
+function deleteItem(itemId) {
+    if (confirm('Are you sure you want to delete this item?')) {
+        // Create a form to delete the item
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = window.location.href;
+        
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrfmiddlewaretoken';
+        csrfInput.value = csrfToken;
+        
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = 'delete';
+        
+        const itemIdInput = document.createElement('input');
+        itemIdInput.type = 'hidden';
+        itemIdInput.name = 'item_id';
+        itemIdInput.value = itemId;
+        
+        form.appendChild(csrfInput);
+        form.appendChild(actionInput);
+        form.appendChild(itemIdInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+// Add custom category option
+document.getElementById('category').addEventListener('change', function() {
+    if (this.value === 'Other') {
+        const customCategory = prompt('Enter custom category:');
+        if (customCategory) {
+            const option = document.createElement('option');
+            option.value = customCategory;
+            option.text = customCategory;
+            option.selected = true;
+            this.appendChild(option);
+        } else {
+            this.value = '';
+        }
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Find Suppliers - StreetEats Connect{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/suppliers.css' %}">
+{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="suppliers-hero">
+        <div class="suppliers-hero-container">
+            <div class="suppliers-hero-content">
+                <h1>Find Quality Suppliers</h1>
+                <p>Search for verified suppliers of raw materials, packaging, and supplies for your street food business</p>
+            </div>
+            <div class="suppliers-hero-illustration">
+                <img src="{% static 'images/supplier-marketplace.svg' %}" alt="Supplier marketplace illustration">
+            </div>
+        </div>
+    </section>
+    <!-- Search and Filter Section -->
+    <section class="search-section">
+        <div class="search-container">
+            <!-- Location Selection -->
+            <div class="location-selection">
+                <div class="location-option">
+                    <select id="state-selector" class="location-select">
+                        <option value="" disabled selected>Select Your State</option>
+                    </select>
+                </div>
+                <div class="location-divider">OR</div>
+                <div class="location-option">
+                    <button id="current-location-btn" class="btn btn-primary location-btn">
+                        <i class="fas fa-location-arrow"></i>
+                        Use Current Location
+                    </button>
+                </div>
+            </div>
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <div class="search-input-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="search-input" placeholder="Search for raw materials (e.g., vegetables, spices, packaging)" class="search-input">
+                </div>
+                <button id="search-btn" class="btn btn-primary search-button">
+                    <i class="fas fa-search"></i>
+                    Find Suppliers
+                </button>
+                <button id="test-search-btn" class="btn btn-secondary search-button" style="margin-left: 10px;">
+                    <i class="fas fa-flask"></i>
+                    Test Search
+                </button>
+            </div>
+            <!-- Category Filters -->
+            <div class="category-filters">
+                <h3>Quick Categories:</h3>
+                <div class="category-buttons">
+                    <button class="category-btn" data-category="vegetables">
+                        <i class="fas fa-carrot"></i>
+                        Vegetables
+                    </button>
+                    <button class="category-btn" data-category="fruits">
+                        <i class="fas fa-apple-alt"></i>
+                        Fruits
+                    </button>
+                    <button class="category-btn" data-category="dairy">
+                        <i class="fas fa-cheese"></i>
+                        Dairy
+                    </button>
+                    <button class="category-btn" data-category="spices">
+                        <i class="fas fa-pepper-hot"></i>
+                        Spices
+                    </button>
+                    <button class="category-btn" data-category="grains">
+                        <i class="fas fa-seedling"></i>
+                        Grains
+                    </button>
+                    <button class="category-btn" data-category="meat">
+                        <i class="fas fa-drumstick-bite"></i>
+                        Meat
+                    </button>
+                    <button class="category-btn" data-category="oil">
+                        <i class="fas fa-oil-can"></i>
+                        Oil & Ghee
+                    </button>
+                    <button class="category-btn" data-category="packaging">
+                        <i class="fas fa-box"></i>
+                        Packaging
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Results Section -->
+    <section class="results-section">
+        <div class="results-container">
+            <div class="results-header">
+                <h2 id="results-title">Search Results</h2>
+                <div class="results-count">
+                    <span id="results-count">0 suppliers found</span>
+                </div>
+            </div>
+            <!-- Loading State -->
+            <div id="loading-state" class="loading-state hidden">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <p id="loading-text">Searching for suppliers...</p>
+            </div>
+            <!-- Empty State -->
+            <div id="empty-state" class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>Find Your Suppliers</h3>
+                <p>Select your location and search for raw materials to find verified suppliers in your area</p>
+            </div>
+            <!-- No Results State -->
+            <div id="no-results-state" class="no-results-state hidden">
+                <div class="no-results-icon">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <h3>No Suppliers Found</h3>
+                <p>Try searching with different keywords or select a different location</p>
+            </div>
+            <!-- Results Grid -->
+            <div id="results-grid" class="results-grid hidden">
+                <!-- Supplier cards will be inserted here -->
+            </div>
+            <!-- Products Grid -->
+            <div id="products-grid" class="products-grid hidden">
+                <!-- Product cards will be inserted here -->
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Hidden map div for Google Places service -->
+<div id="map-hidden" style="display: none;"></div>
+
+<!-- Database functionality -->
+<script src="{% static 'js/database.js' %}"></script>
+
+<!-- Cart functionality -->
+<script src="{% static 'js/cart.js' %}"></script>
+
+<!-- Google Maps API with Places library -->
+<script>
+    // Global variables for Google Maps
+    let map;
+    let placesService;
+    
+    // Initialize Google Maps callback
+    function initGoogleMaps() {
+        console.log('Google Maps API loaded');
+        
+        // Create a hidden map for Places service
+        const mapDiv = document.getElementById('map-hidden');
+        if (mapDiv) {
+            map = new google.maps.Map(mapDiv, {
+                center: { lat: 20.5937, lng: 78.9629 }, // Central India
+                zoom: 6
+            });
+            
+            // Initialize Places service
+            placesService = new google.maps.places.PlacesService(map);
+            window.placesService = placesService; // Make it globally available
+            
+            console.log('Google Places service initialized');
+        }
+    }
+    
+    // Initialize database
+    const database = new Database();
+    window.database = database;
+</script>
+
+<!-- Suppliers functionality -->
+<script src="{% static 'js/suppliers.js' %}"></script>
+
+<!-- Google Maps API Script - Replace YOUR_API_KEY with your actual API key -->
+<script async defer 
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDlUA08XBNjfD25c5ZjuESTSCbA5cqaHY&libraries=places&callback=initGoogleMaps">
+</script>
+{% endblock %}
